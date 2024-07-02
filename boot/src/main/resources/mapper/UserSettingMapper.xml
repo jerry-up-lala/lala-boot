@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.UserSettingMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.UserSetting">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="theme" column="theme" jdbcType="VARCHAR"/>
+        <result property="navbar" column="navbar" jdbcType="BIT"/>
+        <result property="menu" column="menu" jdbcType="BIT"/>
+        <result property="topMenu" column="top_menu" jdbcType="BIT"/>
+        <result property="menuCollapse" column="menu_collapse" jdbcType="BIT"/>
+        <result property="menuWidth" column="menu_width" jdbcType="INTEGER"/>
+        <result property="footer" column="footer" jdbcType="BIT"/>
+        <result property="tabBar" column="tab_bar" jdbcType="BIT"/>
+        <result property="colorWeak" column="color_weak" jdbcType="BIT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tenant_id,user_id,
+        theme,navbar,menu,
+        top_menu,menu_collapse,menu_width,
+        footer,tab_bar,color_weak,
+        create_time,create_user,update_time,
+        update_user,deleted
+    </sql>
+</mapper>

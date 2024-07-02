@@ -1,0 +1,51 @@
+common:
+  dataPath: ${DATA_PATH:/data}
+
+  access: ${env.access}
+
+  open-urls:
+    - /favicon.ico
+    - /registry/machine
+    - /**/open/**
+    - /**/druid/**
+    - /**/actuator/**
+    - /**/error/**
+
+  log:
+    mq: ${env.log.mq}
+    print: ${env.log.print}
+  
+  mail:
+    host: ${env.mail.host}
+    port: ${env.mail.port}
+    from: ${env.mail.from}
+    user: ${env.mail.user}
+    pass: ${env.mail.pass}
+    subject-prefix: ${env.mail.subjectPrefix}
+
+  upload:
+    max: ${env.upload.max}
+    partition: ${env.upload.partition}
+
+  error:
+    catch-print: ${env.error.catchPrint}
+    service-print: ${env.error.servicePrint}
+    runTime-print: ${env.error.runTimePrint}
+    mail: 
+      open: ${env.error.mail.open}
+      level: ${env.error.mail.level}
+      receivers: ${env.error.mail.receivers}
+
+tenant:
+  # NONE-非租户模式,COLUMN_NAME-字段模式,TABLE_NAME-表名模式,DATA_SOURCE-数据源模式
+  mode: COLUMN_NAME
+  column-name: tenant_id
+  ignore-tables:
+    - ^common_*
+    - ^sys_*
+    - ^tables*
+    - ^columns*
+
+api:
+  doc: ${env.api.doc}
+  count: ${env.api.count}

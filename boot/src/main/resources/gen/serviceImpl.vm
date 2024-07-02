@@ -1,0 +1,297 @@
+#set($Import_BigDecimal = false)
+#set($Import_Date = false)
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Key_Field_Type = "String")
+#set($Key_Field_Name = "id")
+#set($Key_Upper_First_Field_Name = "Id")
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.columnKey == 'PRI')
+            #set($Key_Field_Type = ${column.fieldType})
+            #set($Key_Field_Name = ${column.fieldName})
+            #set($Key_Upper_First_Field_Name = ${column.upperFirstFieldName})
+        #end
+        #if($column.fieldType == 'BigDecimal')
+            #set($Import_BigDecimal = true)
+        #end
+        #if($column.fieldType == 'Date')
+            #set($Import_Date = true)
+        #end
+    #end
+#end
+package ${packageName}.service.impl;
+
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.BooleanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+#if($Key_Field_Type == 'String')
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+#end
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${packageName}.bo.${className}ExcelBO;
+import ${packageName}.dto.${className}QueryDTO;
+import ${packageName}.entity.${className};
+import ${packageName}.mapper.${className}Mapper;
+import ${packageName}.service.${className}Service;
+import ${packageName}.vo.${className}ExportQueryVO;
+import ${packageName}.vo.${className}InfoVO;
+import ${packageName}.vo.${className}QueryVO;
+import ${packageName}.vo.${className}SaveVO;
+import com.jerry.up.lala.framework.core.common.*;
+import com.jerry.up.lala.framework.core.data.DataUtil;
+import com.jerry.up.lala.framework.core.excel.ExcelCheckErrorBO;
+import com.jerry.up.lala.framework.core.excel.ExcelUtil;
+import com.jerry.up.lala.framework.core.exception.ServiceException;
+import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.core.data.CheckUtil;
+import com.jerry.up.lala.framework.core.data.PageUtil;
+import com.jerry.up.lala.framework.core.data.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+#if($Import_BigDecimal)
+import java.math.BigDecimal;
+#end
+#if($Import_Date)
+import java.util.Date;
+#end
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * <p>Description: ${functionName} Service 实现
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Service
+public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${className}> implements ${className}Service {
+
+    @Autowired
+    private CommonProperties commonProperties;
+
+    @Override
+    public PageR<${className}InfoVO> pageQuery(${className}QueryVO ${lowerFirstClassName}QueryVO) {
+        ${className}QueryDTO queryDTO = DataUtil.toBean(${lowerFirstClassName}QueryVO, ${className}QueryDTO.class);
+        IPage<${className}> pageResult = pageByDTO(${lowerFirstClassName}QueryVO, queryDTO);
+        try {
+            return PageUtil.toPageR(pageResult, ${className}InfoVO.class);
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.QUERY_ERROR, e);
+        }
+    }
+
+    @Override
+    public ${className}InfoVO info(${Key_Field_Type} ${Key_Field_Name}) {
+        ${className} ${lowerFirstClassName} = get(id);
+        return DataUtil.toBean(${lowerFirstClassName}, ${className}InfoVO.class);
+    }
+
+    @Override
+    public void add(${className}SaveVO ${lowerFirstClassName}SaveVO) {
+        check${className}SaveVO(${lowerFirstClassName}SaveVO);
+        try {
+            ${className} ${lowerFirstClassName} = DataUtil.toBean(${lowerFirstClassName}SaveVO, ${className}.class);
+            ${lowerFirstClassName}.loadCreate();
+            save(${lowerFirstClassName});
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.SAVE_ERROR, e);
+        }
+    }
+
+    @Override
+    public void update(${Key_Field_Type} ${Key_Field_Name}, ${className}SaveVO ${lowerFirstClassName}SaveVO) {
+        check${className}SaveVO(${lowerFirstClassName}SaveVO);
+        ${className} old${className} = get(id);
+        try {
+            DataUtil.copy(${lowerFirstClassName}SaveVO, old${className});
+            old${className}.loadUpdate();
+            updateById(old${className});
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.UPDATE_ERROR, e);
+        }
+    }
+
+    @Override
+    public void delete(${Key_Field_Type} ${Key_Field_Name}) {
+        #if($Key_Field_Type == 'String')
+        if (StringUtil.isNull(id)) {
+        #else
+        if (id == null) {
+        #end
+            throw ServiceException.args();
+        }
+        try {
+            removeById(id);
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.DELETE_ERROR, e);
+        }
+    }
+
+    @Override
+    public void batchDelete(DataBody<List<${Key_Field_Type}>> dataBody) {
+        List<${Key_Field_Type}> value = CheckUtil.dataNull(dataBody);
+        try {
+            remove(new LambdaQueryWrapper<${className}>().in(${className}::get${Key_Upper_First_Field_Name}, value));
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.DELETE_ERROR, e);
+        }
+    }
+
+    @Override
+    public Integer upload(MultipartFile file) {
+        List<${className}ExcelBO> uploadList = ExcelUtil.read(file, ${className}ExcelBO.class);
+        String checkUpload = checkUpload(uploadList);
+        if (StringUtil.isNotNull(checkUpload)) {
+            throw ServiceException.error(Errors.dynamicMsgError(Errors.UPLOAD_ERROR, checkUpload));
+        }
+        try {
+            List<${className}> ${lowerFirstClassName}List = uploadList.stream().map(
+                    item -> {
+                        ${className} ${lowerFirstClassName} = DataUtil.toBean(item, ${className}.class);
+                        #if($Key_Field_Type == 'String')
+                        ${lowerFirstClassName}.set${Key_Upper_First_Field_Name}(IdWorker.getIdStr());
+                        #end
+                        ${lowerFirstClassName}.setCreateUser(SaTokenUtil.currentUser().getUserId());
+                        ${lowerFirstClassName}.setCreateTime(new Date());
+                        ${lowerFirstClassName}.setDeleted(false);
+                        return ${lowerFirstClassName};
+                    }
+            ).collect(Collectors.toList());
+
+            List<List<${className}>> partitionList = ListUtil.partition(${lowerFirstClassName}List, commonProperties.getUpload().getPartition());
+
+            partitionList.forEach(item -> getBaseMapper().insertBatch(item));
+
+            return ${lowerFirstClassName}List.size();
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.UPLOAD_ERROR, e);
+        }
+    }
+
+    @Override
+    public Object export(${className}ExportQueryVO ${lowerFirstClassName}ExportQueryVO) {
+        ${className}QueryDTO queryDTO = DataUtil.toBean(${lowerFirstClassName}ExportQueryVO, ${className}QueryDTO.class);
+        List<${className}> list = BooleanUtil.isTrue(${lowerFirstClassName}ExportQueryVO.getCurrentPage()) ?
+                pageByDTO(${lowerFirstClassName}ExportQueryVO, queryDTO.set${Key_Upper_First_Field_Name}s(null)).getRecords() : listByDTO(queryDTO);
+        if (CollectionUtil.isEmpty(list)) {
+            throw ServiceException.error(Errors.EXPORT_EMPTY_ERROR);
+        }
+        List<${className}ExcelBO> exportList = list.stream().map(item -> {
+            ${className}ExcelBO ${lowerFirstClassName}ExcelBO = DataUtil.toBean(item, ${className}ExcelBO.class);
+            return ${lowerFirstClassName}ExcelBO;
+        }).collect(Collectors.toList());
+
+        String fileName = "${functionName}导出-" + DatePattern.PURE_DATETIME_MS_FORMAT.format(new Date()) + ".xlsx";
+        return ExcelUtil.export(fileName, exportList, ${className}ExcelBO.class);
+    }
+
+    private List<${className}> listByDTO(${className}QueryDTO ${lowerFirstClassName}QueryDTO) {
+        try {
+            LambdaQueryWrapper<${className}> queryWrapper = loadQuery(${lowerFirstClassName}QueryDTO);
+            return list(queryWrapper);
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.QUERY_ERROR, e);
+        }
+    }
+
+    private IPage<${className}> pageByDTO(PageQuery pageQuery, ${className}QueryDTO ${lowerFirstClassName}QueryDTO) {
+        Page<${className}> page = PageUtil.initPage(pageQuery);
+        try {
+            LambdaQueryWrapper<${className}> queryWrapper = loadQuery(${lowerFirstClassName}QueryDTO);
+            return page(page, queryWrapper);
+        } catch (Exception e) {
+            throw ServiceException.error(Errors.QUERY_ERROR, e);
+        }
+    }
+
+    private ${className} get(${Key_Field_Type} ${Key_Field_Name}) {
+        #if($Key_Field_Type == 'String')
+        if (StringUtil.isNull(id)) {
+        #else
+        if (id == null) {
+        #end
+            throw ServiceException.args();
+        }
+        ${className} ${lowerFirstClassName} = getById(id);
+        if (${lowerFirstClassName} == null) {
+            throw ServiceException.notFound();
+        }
+        return ${lowerFirstClassName};
+    }
+
+    private void check${className}SaveVO(${className}SaveVO ${lowerFirstClassName}SaveVO) {
+        if (${lowerFirstClassName}SaveVO == null) {
+            throw ServiceException.args();
+        }
+        // more check...
+    }
+
+    private LambdaQueryWrapper<${className}> loadQuery(${className}QueryDTO ${lowerFirstClassName}QueryDTO) {
+        LambdaQueryWrapper<${className}> queryWrapper = new LambdaQueryWrapper<>();
+        if (${lowerFirstClassName}QueryDTO != null) {
+            List<${Key_Field_Type}> ${Key_Field_Name}s = ${lowerFirstClassName}QueryDTO.get${Key_Upper_First_Field_Name}s();
+            if (CollectionUtil.isNotEmpty(${Key_Field_Name}s)) {
+                queryWrapper.in(Crud::get${Key_Upper_First_Field_Name}, ${Key_Field_Name}s);
+            }
+
+        #foreach ($column in $columnList)
+            #if(!$Entity_Column_List.contains(${column.columnName}))
+            #if($column.fieldType == 'String')
+            ${column.fieldType} ${column.fieldName} = ${lowerFirstClassName}QueryDTO.get${column.upperFirstFieldName}();
+            if (StringUtil.isNotNull(${column.fieldName})) {
+                queryWrapper.like(${className}::get${column.upperFirstFieldName}, ${column.fieldName});
+            }
+            #elseif($column.fieldType == 'Date')
+            Date ${column.fieldName}Start = ${lowerFirstClassName}QueryDTO.get${column.upperFirstFieldName}Start();
+            if (${column.fieldName}Start != null) {
+                queryWrapper.ge(${className}::get${column.upperFirstFieldName}, ${column.fieldName}Start);
+            }
+
+            Date ${column.fieldName}End = ${lowerFirstClassName}QueryDTO.get${column.upperFirstFieldName}End();
+            if (${column.fieldName}End != null) {
+                queryWrapper.le(${className}::get${column.upperFirstFieldName}, ${column.fieldName}End);
+            }
+            #else
+            ${column.fieldType} ${column.fieldName} = ${lowerFirstClassName}QueryDTO.get${column.upperFirstFieldName}();
+            if (${column.fieldName} != null) {
+                queryWrapper.eq(${className}::get${column.upperFirstFieldName}, ${column.fieldName});
+            }
+            #end
+
+            #end
+        #end
+        }
+        return queryWrapper;
+    }
+
+    private String checkUpload(List<${className}ExcelBO> uploadList) {
+        if (CollectionUtil.isEmpty(uploadList)) {
+            return StringUtil.fontRed("导入数据不能为空");
+        }
+        Integer max = commonProperties.getUpload().getMax();
+        if (uploadList.size() > commonProperties.getUpload().getMax()) {
+            return StringUtil.fontRed("导入数据不能超过" + max + "条");
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < uploadList.size(); i++) {
+            ${className}ExcelBO ${lowerFirstClassName}ExcelBO = uploadList.get(i);
+            List<ExcelCheckErrorBO> rowCheckList = ExcelUtil.check(${lowerFirstClassName}ExcelBO, (fieldName, value) -> {
+                // check more
+                return null;
+            });
+            if (CollectionUtil.isNotEmpty(rowCheckList)) {
+                for (ExcelCheckErrorBO rowCheck : rowCheckList) {
+                    result.append(ExcelUtil.checkMessage(i + 1, rowCheck));
+                }
+            }
+        }
+        return result.toString();
+    }
+
+}

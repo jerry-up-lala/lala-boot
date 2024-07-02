@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.RoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.Role">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="BIT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="DTOResultMap" type="com.jerry.up.lala.boot.dto.RoleDTO" extends="BaseResultMap">
+        <result property="menuIdStrs" column="menu_id_strs" jdbcType="VARCHAR"/>
+        <result property="userIdStrs" column="user_id_strs" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,role_name,description,state,
+        create_time,create_user,update_time,update_user
+    </sql>
+
+
+    <select id="selectDTOById" resultMap="DTOResultMap">
+        select r.id,
+               r.role_name,
+               r.description,
+               r.state,
+               r.create_time,
+               r.create_user,
+               r.update_time,
+               r.update_user,
+               (SELECT GROUP_CONCAT(DISTINCT rm.menu_id)
+                FROM role_menu rm
+                WHERE rm.role_id = r.id
+                GROUP BY rm.role_id) as menu_id_strs,
+               (SELECT GROUP_CONCAT(DISTINCT ru.user_id)
+                FROM role_user ru
+                WHERE ru.role_id = r.id
+                GROUP BY ru.role_id) as user_id_strs
+        from role r
+        where r.id = #{id,jdbcType=NUMERIC}
+    </select>
+</mapper>

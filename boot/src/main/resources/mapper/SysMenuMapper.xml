@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.SysMenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.SysMenu">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="BIGINT"/>
+        <result property="locale" column="locale" jdbcType="VARCHAR"/>
+        <result property="localeZhCn" column="locale_zh_cn" jdbcType="VARCHAR"/>
+        <result property="requiresAuth" column="requires_auth" jdbcType="BIT"/>
+        <result property="accessCodes" column="access_codes" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="hideInMenu" column="hide_in_menu" jdbcType="BIT"/>
+        <result property="hideChildrenInMenu" column="hide_children_in_menu" jdbcType="BIT"/>
+        <result property="noAffix" column="no_affix" jdbcType="BIT"/>
+        <result property="menuOrder" column="menu_order" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_id,type,
+        locale,locale_zh_cn,requires_auth,
+        access_codes,name,path,
+        icon,hide_in_menu,hide_children_in_menu,
+        no_affix,menu_order,create_time,
+        create_user,update_time,update_user,
+        deleted
+    </sql>
+</mapper>

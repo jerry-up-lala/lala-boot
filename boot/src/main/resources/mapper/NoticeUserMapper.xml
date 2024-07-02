@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.NoticeUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.NoticeUser">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="noticeId" column="notice_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="readState" column="read_state" jdbcType="INTEGER"/>
+        <result property="readTime" column="read_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <resultMap id="CountResultMap" type="com.jerry.up.lala.boot.dto.NoticeUserCountDTO">
+        <result property="noticeType" column="notice_type" jdbcType="INTEGER"/>
+        <result property="count" column="count" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tenant_id,notice_id,
+        user_id,read_state,read_time,
+        create_time,create_user,update_time,update_user,deleted
+    </sql>
+
+    <insert id="insertBatch">
+        insert into notice_user(notice_id,user_id,read_state,read_time,
+        create_time,create_user,update_time,update_user,deleted)
+        values
+        <foreach collection="noticeUserCollection" item="item" separator=",">
+            (#{item.noticeId,jdbcType=NUMERIC},#{item.userId,jdbcType=VARCHAR},#{item.readState,jdbcType=NUMERIC},#{item.readTime,jdbcType=TIMESTAMP},
+            #{item.createTime,jdbcType=TIMESTAMP},#{item.createUser,jdbcType=VARCHAR},#{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR},
+            #{item.deleted,jdbcType=BOOLEAN})
+        </foreach>
+    </insert>
+
+
+    <select id="groupCount" resultMap="CountResultMap">
+        select n.notice_type, COUNT(1) as count
+        from notice_user nu
+                 left join notice n on n.id = nu.notice_id
+        where nu.user_id = #{userId,jdbcType=VARCHAR}
+          and nu.read_state = #{readState,jdbcType=INTEGER}
+          and n.notice_type is not null
+        group by n.notice_type
+    </select>
+
+</mapper>

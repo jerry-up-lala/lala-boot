@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.CrudMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.Crud">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="input" column="input" jdbcType="VARCHAR"/>
+        <result property="inputNumber" column="input_number" jdbcType="DECIMAL"/>
+        <result property="inputTags" column="input_tags" jdbcType="VARCHAR"/>
+        <result property="autoComplete" column="auto_complete" jdbcType="VARCHAR"/>
+        <result property="mention" column="mention" jdbcType="VARCHAR"/>
+        <result property="textArea" column="text_area" jdbcType="VARCHAR"/>
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="slider" column="slider" jdbcType="INTEGER"/>
+        <result property="switchInfo" column="switch_info" jdbcType="BIT"/>
+        <result property="radio" column="radio" jdbcType="INTEGER"/>
+        <result property="checkboxes" column="checkboxes" jdbcType="VARCHAR"/>
+        <result property="selectInfo" column="select_info" jdbcType="INTEGER"/>
+        <result property="cascader" column="cascader" jdbcType="INTEGER"/>
+        <result property="treeSelect" column="tree_select" jdbcType="INTEGER"/>
+        <result property="transfers" column="transfers" jdbcType="VARCHAR"/>
+        <result property="dateTimePicker" column="date_time_picker" jdbcType="TIMESTAMP"/>
+        <result property="upload" column="upload" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tenant_id,input,
+        input_number,input_tags,auto_complete,
+        mention,text_area,rate,
+        slider,switch_info,radio,
+        checkboxes,select_info,cascader,
+        tree_select,transfers,date_time_picker,upload,
+        create_time,create_user,update_time,update_user,
+        deleted
+    </sql>
+
+    <insert id="insertBatch">
+        insert into crud(id,input,
+        input_number,input_tags,auto_complete,
+        mention,text_area,rate,
+        slider,switch_info,radio,
+        checkboxes,select_info,cascader,
+        tree_select,transfers,date_time_picker,
+        upload,create_time,create_user,
+        update_time,update_user,deleted)
+        values
+        <foreach collection="crudCollection" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR},#{item.input,jdbcType=VARCHAR},
+            #{item.inputNumber,jdbcType=DECIMAL},#{item.inputTags,jdbcType=VARCHAR},#{item.autoComplete,jdbcType=VARCHAR},
+            #{item.mention,jdbcType=VARCHAR},#{item.textArea,jdbcType=VARCHAR},#{item.rate,jdbcType=DECIMAL},
+            #{item.slider,jdbcType=NUMERIC},#{item.switchInfo,jdbcType=BOOLEAN},#{item.radio,jdbcType=NUMERIC},
+            #{item.checkboxes,jdbcType=VARCHAR},#{item.selectInfo,jdbcType=NUMERIC},#{item.cascader,jdbcType=NUMERIC},
+            #{item.treeSelect,jdbcType=NUMERIC},#{item.transfers,jdbcType=VARCHAR},#{item.dateTimePicker,jdbcType=TIMESTAMP},
+            #{item.upload,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},#{item.createUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR},#{item.deleted,jdbcType=BOOLEAN})
+        </foreach>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: boot-env
+data:
+ NACOS_CONFIG_HOST: {{NACOS_CONFIG_HOST}}
+ NACOS_CONFIG_ENV: {{NACOS_CONFIG_ENV}}
+ JVM_OPTIONS: "-Xmx1024m \
+  -Xms1024m \
+  -Xmn512m \
+  -Xss256k \
+  -XX:SurvivorRatio=8 \
+  -XX:MetaspaceSize=128m \
+  -XX:MaxMetaspaceSize=384m \
+  -XX:-OmitStackTraceInFastThrow \
+  -XX:+HeapDumpOnOutOfMemoryError \
+  -XX:HeapDumpPath=/data/logs/heapdump.hprof \
+  -XX:+UseCMSInitiatingOccupancyOnly \
+  -XX:CMSInitiatingOccupancyFraction=75 \
+  -Xloggc:/data/logs/loggc.log \
+  -XX:+PrintGCDetails \
+  -XX:+PrintGCDateStamps \
+  -XX:+PrintGCApplicationConcurrentTime \
+  -XX:+PrintHeapAtGC \
+  -XX:+UseGCLogFileRotation \
+  -XX:NumberOfGCLogFiles=5 \
+  -XX:GCLogFileSize=5M"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boot-{{POM_VERSION}}
+  labels:
+    app: boot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boot
+  template:
+    metadata:
+      labels:
+        app: boot
+    spec:
+      volumes: 
+        - name: data
+          hostPath: 
+            path: {{DEPLOY_DIR}}/data
+            type: DirectoryOrCreate
+        - name: nacos
+          hostPath: 
+            path: {{DEPLOY_DIR}}/nacos
+            type: DirectoryOrCreate
+      imagePullSecrets:
+        - name: jerry-up-secret
+      containers:
+        - name: gateway
+          image: registry.cn-hangzhou.aliyuncs.com/jerry-up/boot:{{POM_VERSION}}-RC
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "2G"
+              cpu: "500m"
+            requests:
+              memory: "2G"
+              cpu: "500m"
+          envFrom:
+            - configMapRef:
+                name: boot-env
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: nacos
+              mountPath: /root/nacos
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: boot-service
+  labels:
+    app: boot-service
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: {{SERVER_PORT}}
+  selector:
+    app: boot

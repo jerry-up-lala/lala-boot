@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.SysGenColumnMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.SysGenColumn">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tableId" column="table_id" jdbcType="BIGINT"/>
+        <result property="columnName" column="column_name" jdbcType="VARCHAR"/>
+        <result property="fieldName" column="field_name" jdbcType="VARCHAR"/>
+        <result property="fieldType" column="field_type" jdbcType="VARCHAR"/>
+        <result property="fieldComment" column="field_comment" jdbcType="VARCHAR"/>
+        <result property="fieldDictKey" column="field_dict_key" jdbcType="VARCHAR"/>
+        <result property="fieldOrdinalPosition" column="field_ordinal_position" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <resultMap id="InformationSchemaColumnDTOResultMap" type="com.jerry.up.lala.boot.dto.InformationSchemaColumnDTO">
+        <result property="tableSchema" column="table_schema" jdbcType="VARCHAR"/>
+        <result property="tableName" column="table_name" jdbcType="VARCHAR"/>
+        <result property="columnName" column="column_name" jdbcType="VARCHAR"/>
+        <result property="columnKey" column="column_key" jdbcType="VARCHAR"/>
+        <result property="columnExtra" column="column_extra" jdbcType="VARCHAR"/>
+        <result property="columnComment" column="column_comment" jdbcType="VARCHAR"/>
+        <result property="columnDataType" column="column_data_type" jdbcType="VARCHAR"/>
+        <result property="columnType" column="column_type" jdbcType="VARCHAR"/>
+        <result property="columnOrdinalPosition" column="column_ordinal_position" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,table_id,column_name,field_name,field_type,field_comment,field_ordinal_position,
+        create_time,create_user,update_time,update_user,deleted
+    </sql>
+
+    <select id="list" resultMap="InformationSchemaColumnDTOResultMap">
+        SELECT
+            c.table_schema,
+            c.table_name,
+            c.column_name,
+            c.column_key,
+            c.extra as column_extra,
+            c.column_comment,
+            c.data_type as column_data_type,
+            c.column_type,
+            c.ordinal_position as column_ordinal_position
+        FROM
+            information_schema.COLUMNS c
+        WHERE
+            c.table_schema = #{tableSchema,jdbcType=VARCHAR} AND c.table_name = #{tableName,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        update sys_gen_column
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="field_name = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.fieldName,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="field_type = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.fieldType,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="field_comment = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.fieldComment,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="field_dict_key = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.fieldDictKey,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+            <trim prefix="field_ordinal_position = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.fieldOrdinalPosition,jdbcType=INTEGER}
+                </foreach>
+            </trim>
+            <trim prefix="update_time = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+                </foreach>
+            </trim>
+            <trim prefix="update_user = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    when id = #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=VARCHAR}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" item="item" open="("  close=")" separator=", ">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

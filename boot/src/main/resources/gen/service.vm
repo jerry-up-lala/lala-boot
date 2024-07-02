@@ -1,0 +1,120 @@
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Key_Field_Type = "String")
+#set($Key_Field_Name = "id")
+#set($Key_Upper_First_Field_Name = "Id")
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.columnKey == 'PRI')
+            #set($Key_Field_Type = ${column.fieldType})
+            #set($Key_Field_Name = ${column.fieldName})
+            #set($Key_Upper_First_Field_Name = ${column.upperFirstFieldName})
+        #end
+    #end
+#end
+package ${packageName}.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${packageName}.entity.${className};
+import ${packageName}.vo.${className}ExportQueryVO;
+import ${packageName}.vo.${className}InfoVO;
+import ${packageName}.vo.${className}QueryVO;
+import ${packageName}.vo.${className}SaveVO;
+import com.jerry.up.lala.framework.core.common.DataBody;
+import com.jerry.up.lala.framework.core.common.PageR;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+/**
+ * <p>Description: ${functionName} Service
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+ public interface ${className}Service extends IService<${className}> {
+
+    /**
+     * <p>Description: 分页查询
+     *
+     * @param ${lowerFirstClassName}QueryVO 查询条件
+     * @return 分页数据
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    PageR<${className}InfoVO> pageQuery(${className}QueryVO ${lowerFirstClassName}QueryVO);
+
+    /**
+     * <p>Description: 查询
+     *
+     * @param ${Key_Field_Name} 主键
+     * @return ${lowerFirstClassName}信息
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    ${className}InfoVO info(${Key_Field_Type} ${Key_Field_Name});
+
+    /**
+     * <p>Description: 新增
+     *
+     * @param ${lowerFirstClassName}SaveVO 表单
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    void add(${className}SaveVO ${lowerFirstClassName}SaveVO);
+
+    /**
+     * <p>Description: 更新
+     *
+     * @param ${Key_Field_Name} 主键
+     * @param ${lowerFirstClassName}SaveVO 表单
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    void update(${Key_Field_Type} ${Key_Field_Name}, ${className}SaveVO ${lowerFirstClassName}SaveVO);
+
+    /**
+     * <p>Description: 删除
+     *
+     * @param ${Key_Field_Name} 主键
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    void delete(${Key_Field_Type} ${Key_Field_Name});
+
+    /**
+     * <p>Description: 批量删除
+     *
+     * @param dataBody 主键列表
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    void batchDelete(DataBody<List<${Key_Field_Type}>> dataBody);
+
+    /**
+     * <p>Description: 上传文件
+     *
+     * @param file 文件
+     * @return 上传数量
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    Integer upload(MultipartFile file);
+
+    /**
+     * <p>Description: 导出数据
+     * @param ${lowerFirstClassName}ExportQueryVO 查询条件
+     * @return 导出流
+     * @author ${author}
+     * @date ${date}
+     * @since v1.0.0
+     */
+    Object export(${className}ExportQueryVO ${lowerFirstClassName}ExportQueryVO);
+
+ }

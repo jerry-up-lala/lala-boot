@@ -1,0 +1,54 @@
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Import_BigDecimal = false)
+#set($Import_Date = false)
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.fieldType == 'BigDecimal')
+            #set($Import_BigDecimal = true)
+        #end
+        #if($column.fieldType == 'Date')
+            #set($Import_Date = true)
+        #end
+    #end
+#end
+package ${packageName}.vo;
+
+import ${packageName}.dto.${className}QueryDTO;
+import com.jerry.up.lala.framework.core.common.PageQuery;
+import com.jerry.up.lala.framework.core.data.DataBean;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
+#if($Import_BigDecimal)
+import java.math.BigDecimal;
+#end
+#if($Import_Date)
+import java.util.List;
+#end
+
+/**
+ * <p>Description: ${functionName} 查询 VO
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
+@DataBean(targetTypes = ${className}QueryDTO.class)
+public class ${className}QueryVO extends PageQuery {
+
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+    /**
+     * ${column.fieldComment}
+     */
+    #if($column.fieldType == 'Date')
+    private List<String> ${column.fieldName}Rang;
+    #else
+    private ${column.fieldType} ${column.fieldName};
+    #end
+
+    #end
+#end
+}

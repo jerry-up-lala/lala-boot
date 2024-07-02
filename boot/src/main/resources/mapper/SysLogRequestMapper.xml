@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.up.lala.boot.mapper.SysLogRequestMapper">
+
+    <resultMap id="BaseResultMap" type="com.jerry.up.lala.boot.entity.SysLogRequest">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="userInfo" column="user_info" jdbcType="VARCHAR"/>
+        <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
+        <result property="classMethod" column="class_method" jdbcType="VARCHAR"/>
+        <result property="classParams" column="class_params" jdbcType="VARCHAR"/>
+        <result property="responseSuccess" column="response_success" jdbcType="BIT"/>
+        <result property="responseErrorCode" column="response_error_code" jdbcType="VARCHAR"/>
+        <result property="responseErrorMsg" column="response_error_msg" jdbcType="VARCHAR"/>
+        <result property="responseTime" column="response_time" jdbcType="BIGINT"/>
+        <result property="responseTimeFormat" column="response_time_format" jdbcType="VARCHAR"/>
+        <result property="requestTime" column="request_time" jdbcType="TIMESTAMP"/>
+        <result property="userAgent" column="user_agent" jdbcType="VARCHAR"/>
+        <result property="clientIp" column="client_ip" jdbcType="VARCHAR"/>
+        <result property="scheme" column="scheme" jdbcType="VARCHAR"/>
+        <result property="servletPath" column="servlet_path" jdbcType="VARCHAR"/>
+        <result property="servletMethod" column="servlet_method" jdbcType="VARCHAR"/>
+        <result property="requestUrl" column="request_url" jdbcType="VARCHAR"/>
+        <result property="requestParams" column="request_params" jdbcType="VARCHAR"/>
+        <result property="requestBody" column="request_body" jdbcType="VARCHAR"/>
+        <result property="serverName" column="server_name" jdbcType="VARCHAR"/>
+        <result property="serverPort" column="server_port" jdbcType="INTEGER"/>
+        <result property="remoteHost" column="remote_host" jdbcType="VARCHAR"/>
+        <result property="remotePort" column="remote_port" jdbcType="INTEGER"/>
+        <result property="localAddr" column="local_addr" jdbcType="VARCHAR"/>
+        <result property="localName" column="local_name" jdbcType="VARCHAR"/>
+        <result property="localPort" column="local_port" jdbcType="INTEGER"/>
+        <result property="requestUrlInfo" column="request_url_info" jdbcType="VARCHAR"/>
+        <result property="clientInfo" column="client_info" jdbcType="VARCHAR"/>
+        <result property="serverInfo" column="server_info" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+    </resultMap>
+
+    <resultMap id="StatisticDTOMap" type="com.jerry.up.lala.boot.dto.SysLogRequestStatisticDTO">
+        <result property="request" column="request" jdbcType="BIGINT"/>
+        <result property="yesterday" column="yesterday" jdbcType="BIGINT"/>
+        <result property="today" column="today" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="SumDTOMap" type="com.jerry.up.lala.boot.dto.SysLogRequestSumDTO">
+        <result property="date" column="date" jdbcType="BIGINT"/>
+        <result property="count" column="count" jdbcType="BIGINT"/>
+        <result property="responseSuccessCount" column="response_success_count" jdbcType="BIGINT"/>
+        <result property="responseErrorCount" column="response_error_count" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ServletMethodDTOMap" type="com.jerry.up.lala.boot.dto.SysLogRequestServletMethodDTO">
+        <result property="servletMethod" column="servlet_method" jdbcType="VARCHAR"/>
+        <result property="count" column="count" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ApiNameDTOMap" type="com.jerry.up.lala.boot.dto.SysLogRequestApiNameDTO">
+        <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
+        <result property="count" column="count" jdbcType="BIGINT"/>
+        <result property="maxRequestTime" column="max_request_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tenant_id,login_name,
+        user_id,user_info,api_name,
+        class_method,class_params,response_success,
+        response_error_code,response_error_msg,response_time,
+        response_time_format,request_time,user_agent,
+        client_ip,scheme,servlet_path,
+        servlet_method,request_url,request_params,
+        request_body,server_name,server_port,
+        remote_host,remote_port,local_addr,
+        local_name,local_port,request_url_info,
+        client_info,server_info,create_time,
+        create_user,update_time,update_user,
+        deleted
+    </sql>
+
+
+    <select id="statistic" resultMap="StatisticDTOMap">
+        select COUNT(1)                                                                             as request,
+               sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{yesterday,jdbcType=VARCHAR}, 1, 0)) as yesterday,
+               sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{today,jdbcType=VARCHAR}, 1, 0))     as today
+        from sys_log_request
+    </select>
+
+
+    <select id="sum" resultMap="SumDTOMap">
+        SELECT
+        DATE_FORMAT(request_time,'%Y-%m-%d') as date,
+        COUNT(1) as count,
+        SUM(IF(response_success is TRUE, 1, 0)) as response_success_count,
+        SUM(IF(response_success is TRUE, 0, 1)) as response_error_count
+        FROM
+        sys_log_request
+        <where>
+            DATE_FORMAT(request_time,'%Y-%m-%d') in
+            <foreach collection="requestDateList" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+        GROUP BY DATE_FORMAT(request_time,'%Y-%m-%d')
+        order by DATE_FORMAT(request_time,'%Y-%m-%d') asc
+    </select>
+
+    <select id="servletMethod" resultMap="ServletMethodDTOMap">
+        SELECT
+            servlet_method,
+            COUNT(1) as count
+        FROM
+            sys_log_request
+        GROUP BY servlet_method
+    </select>
+
+    <select id="apiName" resultMap="ApiNameDTOMap">
+        SELECT
+            api_name,
+            COUNT( 1 ) as count,
+            max(request_time) as max_request_time
+        FROM
+            sys_log_request
+        GROUP BY
+            api_name
+        order by COUNT( 1 ) desc limit 5
+    </select>
+</mapper>

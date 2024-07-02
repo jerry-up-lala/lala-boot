@@ -1,0 +1,50 @@
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Import_BigDecimal = false)
+#set($Import_Date = false)
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.fieldType == 'BigDecimal')
+            #set($Import_BigDecimal = true)
+        #end
+        #if($column.fieldType == 'Date')
+            #set($Import_Date = true)
+        #end
+    #end
+#end
+package ${packageName}.vo;
+
+#if($Import_Date)
+import com.fasterxml.jackson.annotation.JsonFormat;
+#end
+import lombok.Data;
+import lombok.experimental.Accessors;
+#if($Import_BigDecimal)
+import java.math.BigDecimal;
+#end
+#if($Import_Date)
+import java.util.Date;
+#end
+
+/**
+ * <p>Description: ${functionName} 信息 VO
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+@Accessors(chain = true)
+public class ${className}InfoVO {
+
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+    /**
+     * ${column.fieldComment}
+     */
+    #if($column.fieldType == 'Date')
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
+    #end
+    private ${column.fieldType} ${column.fieldName};
+
+    #end
+#end
+}

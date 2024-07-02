@@ -1,0 +1,6 @@
+server:
+  port: 8080
+
+gen:
+  project-name: "boot"
+  package-name: "com.jerry.up.lala.boot"

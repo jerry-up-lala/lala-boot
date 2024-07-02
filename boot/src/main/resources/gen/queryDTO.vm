@@ -1,0 +1,73 @@
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Import_BigDecimal = false)
+#set($Import_Date = false)
+#set($Key_Field_Type = "String")
+#set($Key_Field_Name = "id")
+#set($Key_Upper_First_Field_Name = "Id")
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.fieldType == 'BigDecimal')
+            #set($Import_BigDecimal = true)
+        #end
+        #if($column.fieldType == 'Date')
+            #set($Import_Date = true)
+        #end
+        #if($column.columnKey == 'PRI')
+            #set($Key_Field_Type = ${column.fieldType})
+            #set($Key_Field_Name = ${column.fieldName})
+            #set($Key_Upper_First_Field_Name = ${column.upperFirstFieldName})
+        #end
+    #end
+#end
+package ${packageName}.dto;
+
+import com.jerry.up.lala.boot.vo.${className}QueryVO;
+#if($Import_Date)
+import com.jerry.up.lala.framework.core.data.DataFormat;
+#end
+import lombok.Data;
+import lombok.experimental.Accessors;
+#if($Import_BigDecimal)
+import java.math.BigDecimal;
+#end
+#if($Import_Date)
+import java.util.Date;
+#end
+import java.util.List;
+
+/**
+ * <p>Description: ${functionName} 查询 DTO
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+@Accessors(chain = true)
+public class ${className}QueryDTO {
+
+    private List<${Key_Field_Type}> ${Key_Field_Name}s;
+
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+    #if($column.fieldType == 'Date')
+    /**
+     * ${column.fieldComment} 开始
+     */
+    @DataFormat(sourceFieldName = ${className}QueryVO.Fields.${column.fieldName}Rang, listIndex = 0, dateType = 2)
+    private Date ${column.fieldName}Start;
+
+    /**
+     * ${column.fieldComment} 结束
+     */
+    @DataFormat(sourceFieldName = ${className}QueryVO.Fields.${column.fieldName}Rang, listIndex = 1, dateType = 2)
+    private Date ${column.fieldName}End;
+    #else
+    /**
+     * ${column.fieldComment}
+     */
+    private ${column.fieldType} ${column.fieldName};
+    #end
+    #end
+    
+#end
+}

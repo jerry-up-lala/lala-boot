@@ -1,0 +1,75 @@
+#set($Entity_Column_List = ["create_time", "create_user", "update_time", "update_user", "deleted"])
+#set($Import_TableId = false)
+#set($Import_BigDecimal = false)
+#set($Import_Date = false)
+#set($Import_TableField = false)
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+        #if($column.columnKey == 'PRI')
+            #set($Import_TableId = true)
+        #end
+        #if($column.fieldChange)
+            #set($Import_TableField = true)
+        #end
+        #if($column.fieldType == 'BigDecimal')
+            #set($Import_BigDecimal = true)
+        #end
+        #if($column.fieldType == 'Date')
+            #set($Import_Date = true)
+        #end
+    #end
+#end
+package ${packageName}.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+#if($Import_TableId)
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.IdType;
+#end
+#if($Import_TableField)
+import com.baomidou.mybatisplus.annotation.TableField;
+#end
+import ${packageName}.bo.${className}ExcelBO;
+import ${packageName}.vo.${className}InfoVO;
+import com.jerry.up.lala.framework.core.common.Entity;
+import com.jerry.up.lala.framework.core.data.DataBean;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
+#if($Import_BigDecimal)
+import java.math.BigDecimal;
+#end
+#if($Import_Date)
+import java.util.Date;
+#end
+
+/**
+ * <p>Description: ${functionName}表
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@TableName(value = "${tableName}")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
+@DataBean(targetTypes = {${className}InfoVO.class, ${className}ExcelBO.class})
+public class ${className} extends Entity {
+
+#foreach ($column in $columnList)
+    #if(!$Entity_Column_List.contains(${column.columnName}))
+    /**
+     * ${column.fieldComment}
+     */
+    #if($column.columnKey == 'PRI')
+    #if($column.columnExtra == "auto_increment")#set($idType="AUTO")#else #set($idType="ASSIGN_ID")#end
+    @TableId(type = IdType.$idType)
+    #end
+    #if($column.fieldChange)
+    @TableField("${column.columnName}")
+    #end
+    private ${column.fieldType} ${column.fieldName};
+
+    #end
+#end
+}

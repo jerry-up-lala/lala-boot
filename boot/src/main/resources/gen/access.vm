@@ -1,0 +1,51 @@
+package ${packageName}.access;
+
+/**
+ * <p>Description: 访问控制 常量
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+public class AccessConstant {
+
+    /**
+     * ${functionName}
+     */
+    public static final String ${upperCaseClassName} = "${upperCaseClassName}";
+
+    /**
+     * ${functionName}-查询
+     */
+    public static final String ${upperCaseClassName}_QUERY = "${upperCaseClassName}:QUERY";
+
+    /**
+     * ${functionName}-新增
+     */
+    public static final String ${upperCaseClassName}_ADD = "${upperCaseClassName}:ADD";
+
+    /**
+     * ${functionName}-编辑
+     */
+    public static final String ${upperCaseClassName}_UPDATE = "${upperCaseClassName}:UPDATE";
+
+    /**
+     * ${functionName}-导入
+     */
+    public static final String ${upperCaseClassName}_UPLOAD = "${upperCaseClassName}:UPLOAD";
+
+    /**
+     * ${functionName}-导出
+     */
+    public static final String ${upperCaseClassName}_EXPORT = "${upperCaseClassName}:EXPORT";
+
+    /**
+     * ${functionName}-删除
+     */
+    public static final String ${upperCaseClassName}_DELETE = "${upperCaseClassName}:DELETE";
+
+    /**
+     * ${functionName}-批量删除
+     */
+    public static final String ${upperCaseClassName}_BATCH_DELETE = "${upperCaseClassName}:BATCH:DELETE";
+
+}
