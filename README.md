@@ -22,7 +22,7 @@
 
 | 项目                                                   | 仓库地址                                            | 说明                     |
 | ------------------------------------------------------ | ------------------------ | ------------------------ |
-| framework | [![framework#gitee](https://img.shields.io/badge/gitee-snow?logo=Gitee&logoColor=crimson)](https://gitee.com/jerry_up_lala/framework) [![framework#github](https://img.shields.io/badge/github-snow?logo=Github&logoColor=black)](https://github.com/jerry-up-lala/framework)| 基础框架     |
+| framework | [![framework#gitee](https://img.shields.io/badge/gitee-snow?logo=Gitee&logoColor=crimson)](https://gitee.com/jerry_up_lala/lala-framework) [![framework#github](https://img.shields.io/badge/github-snow?logo=Github&logoColor=black)](https://github.com/jerry-up-lala/lala-framework)| 基础框架     |
 | lala-boot-web | [![lala-boot-web#gitee](https://img.shields.io/badge/gitee-snow?logo=Gitee&logoColor=crimson)](https://gitee.com/jerry_up_lala/lala-boot-web) [![lala-boot-web#github](https://img.shields.io/badge/github-snow?logo=Github&logoColor=black)](https://github.com/jerry-up-lala/lala-boot-web) | 配套前端 |
 
 ## 2. 目录说明
@@ -34,25 +34,25 @@ lala-boot
     └──boot #服务端代码
     │   └─src
     │      └─main
-    │      │  └─java
-    │      │     └─com.jerry.up.lala.boot
-    │      │        │  ├─access #访问权限码
-    │      │        │  ├─bo #业务对象
-    │      │        │  ├─component #组件
-    │      │        │  ├─config #配置
-    │      │        │  ├─constant #常量
-    │      │        │  ├─ctrl #控制层
-    │      │        │  ├─dto #数据交互对象
-    │      │        │  ├─entity #实体
-    │      │        │  ├─enums #枚举
-    │      │        │  ├─error #错误码
-    │      │        │  ├─listener #监听
-    │      │        │  ├─mapper #mapper
-    │      │        │  ├─properties #配置
-    │      │        │  ├─service #业务层
-    │      │        │  └─vo #视图对象
-    │      │        └──**App #服务启动类  
-    │      └────resources
+    │        └─java
+    │        |   └─com.jerry.up.lala.boot
+    │        |      │  ├─access #访问权限码
+    │        |      │  ├─bo #业务对象
+    │        |      │  ├─component #组件
+    │        |      │  ├─config #配置
+    │        |      │  ├─constant #常量
+    │        |      │  ├─ctrl #控制层
+    │        |      │  ├─dto #数据交互对象
+    │        |      │  ├─entity #实体
+    │        |      │  ├─enums #枚举
+    │        |      │  ├─error #错误码
+    │        |      │  ├─listener #监听
+    │        |      │  ├─mapper #mapper
+    │        |      │  ├─properties #配置
+    │        |      │  ├─service #业务层
+    │        |      │  └─vo #视图对象
+    │        |      └──**App #服务启动类  
+    │        └──resources
     │               ├─excel #Excel模板文件
     │               ├─gen #代码生成模板
     │               ├─mapper #mybatis mapper xml文件
@@ -85,7 +85,7 @@ lala-boot
 
 ### 4.1. 安装中间件
 
-> 可通过[lala-tool](https://github.com/jerry-up-lala/lala-tool)基于docker或者参照[中间件安装](https://jerry-up-blog.pages.dev/tool/middleware/)初始化环境，亦可自行安装如下版本中间件。
+> 可通过[lala-tool](https://gitee.com/jerry_up_lala/lala-tool)基于docker或者参照[中间件安装](https://jerry-up-blog.pages.dev/tool/middleware/)初始化环境，亦可自行安装如下版本中间件。
 
 | 名称                                        | 版本                                                         |
 | ------------------------------------------- | ------------------------------------------------------------ |
@@ -228,7 +228,7 @@ mysql -h127.0.0.1 -P3306 -uroot -p123456 < ./sql/v1.0.0.sql
 ### 5.2. 项目导入
 
 ```sh
-git clone https://github.com/jerry-up-lala/lala-boot.git
+git clone https://gitee.com/jerry_up_lala/lala-boot.git
 ```
 
 ![导入模块](./assets/image-20240626223711178.png)
