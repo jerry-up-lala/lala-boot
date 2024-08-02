@@ -1,11 +1,7 @@
 package com.jerry.up.lala.boot.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>Description: 个人 信息 vo

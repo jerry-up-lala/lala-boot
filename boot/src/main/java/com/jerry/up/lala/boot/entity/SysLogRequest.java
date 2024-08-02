@@ -3,8 +3,8 @@ package com.jerry.up.lala.boot.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.jerry.up.lala.framework.core.common.Entity;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.boot.entity.Entity;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,7 +27,7 @@ public class SysLogRequest extends Entity {
     private Long id;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private String tenantId;
 

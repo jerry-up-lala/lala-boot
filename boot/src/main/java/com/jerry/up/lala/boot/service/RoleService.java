@@ -6,8 +6,8 @@ import com.jerry.up.lala.boot.vo.RoleInfoVO;
 import com.jerry.up.lala.boot.vo.RoleQueryVO;
 import com.jerry.up.lala.boot.vo.RoleSaveVO;
 import com.jerry.up.lala.boot.vo.RoleVO;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 

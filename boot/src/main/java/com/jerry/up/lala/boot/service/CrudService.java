@@ -6,8 +6,8 @@ import com.jerry.up.lala.boot.vo.CrudExportQueryVO;
 import com.jerry.up.lala.boot.vo.CrudInfoVO;
 import com.jerry.up.lala.boot.vo.CrudQueryVO;
 import com.jerry.up.lala.boot.vo.CrudSaveVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

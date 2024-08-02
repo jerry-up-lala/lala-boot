@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -21,15 +21,15 @@ import com.jerry.up.lala.boot.enums.NoticeUserReadState;
 import com.jerry.up.lala.boot.mapper.NoticeUserMapper;
 import com.jerry.up.lala.boot.service.NoticeUserService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +48,7 @@ public class NoticeUserServiceImpl extends MPJBaseServiceImpl<NoticeUserMapper, 
     public PageR<NoticeUserAllVO> noticeQuery(NoticeUserAllQueryVO noticeUserAllQueryVO) {
         Page<NoticeUserDTO> page = PageUtil.initPage(noticeUserAllQueryVO);
         try {
-            NoticeUserQueryDTO noticeUserQueryDTO = DataUtil.toBean(noticeUserAllQueryVO, NoticeUserQueryDTO.class);
+            NoticeUserQueryDTO noticeUserQueryDTO = BeanUtil.toBean(noticeUserAllQueryVO, NoticeUserQueryDTO.class);
             IPage<NoticeUserDTO> pageResult = pageDTO(page, noticeUserQueryDTO);
             return PageUtil.toPageR(pageResult, NoticeUserAllVO.class);
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class NoticeUserServiceImpl extends MPJBaseServiceImpl<NoticeUserMapper, 
     public PageR<NoticeUserVO> pageQuery(NoticeUserQueryVO noticeUserQueryVO) {
         Page<NoticeUserDTO> page = PageUtil.initPage(noticeUserQueryVO);
         try {
-            NoticeUserQueryDTO noticeUserQueryDTO = DataUtil.toBean(noticeUserQueryVO, NoticeUserQueryDTO.class);
+            NoticeUserQueryDTO noticeUserQueryDTO = BeanUtil.toBean(noticeUserQueryVO, NoticeUserQueryDTO.class);
             // 只查询当前用户 已发送的消息
             noticeUserQueryDTO.setUserId(SaTokenUtil.currentUser().getUserId());
             noticeUserQueryDTO.setSendState(NoticeSendState.SENT.getValue());
@@ -76,7 +76,7 @@ public class NoticeUserServiceImpl extends MPJBaseServiceImpl<NoticeUserMapper, 
         try {
             MPJLambdaWrapper<NoticeUser> query = loadQuery(noticeUserQueryDTO);
             List<NoticeUserDTO> noticeUserList = selectJoinList(NoticeUserDTO.class, query);
-            return DataUtil.toBeanList(noticeUserList, NoticeUserVO.class);
+            return BeanUtil.toBeanList(noticeUserList, NoticeUserVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -109,7 +109,7 @@ public class NoticeUserServiceImpl extends MPJBaseServiceImpl<NoticeUserMapper, 
         }
         NoticeUserDTO noticeUserDTO = infoDTO(id);
         read(ListUtil.of(id));
-        return DataUtil.toBean(noticeUserDTO, NoticeInfoUserVO.class);
+        return BeanUtil.toBean(noticeUserDTO, NoticeInfoUserVO.class);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class NoticeUserServiceImpl extends MPJBaseServiceImpl<NoticeUserMapper, 
                     .set(NoticeUser::getReadTime, now)
                     .set(NoticeUser::getUpdateTime, now)
                     .set(NoticeUser::getUpdateUser, SaTokenUtil.currentUser().getUserId());
-            if (CollectionUtil.isNotEmpty(ids)) {
+            if (CollUtil.isNotEmpty(ids)) {
                 updateWrapper.in(NoticeUser::getId, ids);
             }
             update(updateWrapper);

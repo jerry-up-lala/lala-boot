@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.mapper;
 
-import com.jerry.up.lala.boot.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jerry.up.lala.boot.entity.SysUser;
 
 /**
 * @author jerry

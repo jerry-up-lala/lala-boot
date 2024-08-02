@@ -87,8 +87,8 @@
 
     <select id="statistic" resultMap="StatisticDTOMap">
         select COUNT(1)                                                                             as request,
-               sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{yesterday,jdbcType=VARCHAR}, 1, 0)) as yesterday,
-               sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{today,jdbcType=VARCHAR}, 1, 0))     as today
+               IFNULL(sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{yesterday,jdbcType=VARCHAR}, 1, 0)), 0) as yesterday,
+               IFNULL(sum(IF(DATE_FORMAT(request_time, '%Y-%m-%d') = #{today,jdbcType=VARCHAR}, 1, 0)), 0) as today
         from sys_log_request
     </select>
 

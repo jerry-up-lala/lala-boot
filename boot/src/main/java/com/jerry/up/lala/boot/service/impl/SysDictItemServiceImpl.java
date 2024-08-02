@@ -1,7 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
@@ -22,11 +21,12 @@ import com.jerry.up.lala.boot.error.BootErrors;
 import com.jerry.up.lala.boot.mapper.SysDictItemMapper;
 import com.jerry.up.lala.boot.service.SysDictItemService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.redis.RedisHashTemplate;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.prefix.PrefixComponent;
+import com.jerry.up.lala.framework.boot.redis.RedisHashTemplate;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +47,13 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
 
     @Autowired
     private RedisHashTemplate<String, List<SysDictItemRedisBO>> redisHashTemplate;
+
+    @Autowired
+    private PrefixComponent prefixComponent;
+
+    private String redisKey() {
+        return prefixComponent.projectName(RedisConstant.REDIS_KEY_SYS_DICT);
+    }
 
     @Override
     public List<SysDictItemTreeVO> tree(Long dictId) {
@@ -74,7 +81,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
                     .collect(Collectors.groupingBy(SysDictItemDTO::getDictKey, LinkedHashMap::new, Collectors.toList()));
             itemMap.forEach((dictKey, itemDTOList) -> {
                 List<SysDictItemRedisBO> redisList = convertList(itemDTOList, this::convertRedisBO);
-                redisHashTemplate.put(RedisConstant.REDIS_KEY_SYS_DICT, dictKey, redisList);
+                redisHashTemplate.put(redisKey(), dictKey, redisList);
             });
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
@@ -84,7 +91,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     @Override
     public SysDictItemInfoVO info(Long id) {
         SysDictItemDTO sysDictItemDTO = get(id);
-        return DataUtil.toBean(sysDictItemDTO, SysDictItemInfoVO.class);
+        return BeanUtil.toBean(sysDictItemDTO, SysDictItemInfoVO.class);
     }
 
     @Override
@@ -136,7 +143,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     public void add(Long dictId, SysDictItemSaveVO sysDictItemSaveVO) {
         checkSaveVO(null, dictId, sysDictItemSaveVO);
         try {
-            SysDictItem sysDictItem = DataUtil.toBean(sysDictItemSaveVO, SysDictItem.class).setDictId(dictId);
+            SysDictItem sysDictItem = BeanUtil.toBean(sysDictItemSaveVO, SysDictItem.class).setDictId(dictId);
             if (sysDictItem.getParentId() == null) {
                 sysDictItem.setParentId(rootId);
             }
@@ -152,7 +159,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
         SysDictItem oldSysDictItem = get(id);
         checkSaveVO(id, oldSysDictItem.getDictId(), sysDictItemSaveVO);
         try {
-            DataUtil.copy(sysDictItemSaveVO, oldSysDictItem);
+            BeanUtil.copy(sysDictItemSaveVO, oldSysDictItem);
             if (oldSysDictItem.getParentId() == null) {
                 oldSysDictItem.setParentId(rootId);
             }
@@ -178,12 +185,13 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
 
     @Override
     public Map<String, List<SysDictItemRedisBO>> all() {
-        Map<String, List<SysDictItemRedisBO>> result = redisHashTemplate.getAll(RedisConstant.REDIS_KEY_SYS_DICT);
+        String redisKey = redisKey();
+        Map<String, List<SysDictItemRedisBO>> result = redisHashTemplate.getAll(redisKey);
         if (MapUtil.isNotEmpty(result)) {
             return result;
         }
         refreshCache();
-        return redisHashTemplate.getAll(RedisConstant.REDIS_KEY_SYS_DICT);
+        return redisHashTemplate.getAll(redisKey);
     }
 
     @Override
@@ -194,11 +202,11 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     @Override
     public List<String> dictValuesList(SysDictKey sysDictKey, List<String> valuesList) {
         List<SysDictItemRedisBO> itemList = all().get(sysDictKey.getValue());
-        if (CollectionUtil.isEmpty(itemList)) {
+        if (CollUtil.isEmpty(itemList)) {
             return ListUtil.empty();
         }
         List<String> result = new ArrayList<>();
-        itemList.forEach(item -> dictValuesExpanded(result, item, sysDictItemRedisBO -> CollectionUtil.isEmpty(valuesList) ||
+        itemList.forEach(item -> dictValuesExpanded(result, item, sysDictItemRedisBO -> CollUtil.isEmpty(valuesList) ||
                 valuesList.stream().anyMatch(values -> sysDictItemRedisBO.getValues().startsWith(values))));
         return result;
     }
@@ -216,7 +224,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     @Override
     public List<String> dictLabelsList(SysDictKey sysDictKey, Boolean root, Boolean lowest) {
         List<SysDictItemRedisBO> itemList = all().get(sysDictKey.getValue());
-        if (CollectionUtil.isEmpty(itemList)) {
+        if (CollUtil.isEmpty(itemList)) {
             return ListUtil.empty();
         }
         List<String> result = new ArrayList<>();
@@ -237,7 +245,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     @Override
     public Map<String, String> dictItemMap(SysDictKey sysDictKey, Function<SysDictItemRedisBO, String> key, Function<SysDictItemRedisBO, String> value) {
         List<SysDictItemRedisBO> itemList = all().get(sysDictKey.getValue());
-        if (CollectionUtil.isEmpty(itemList)) {
+        if (CollUtil.isEmpty(itemList)) {
             return MapUtil.empty();
         }
         Map<String, String> result = new HashMap<>();
@@ -252,14 +260,15 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
         if (StringUtil.isNull(dictKey)) {
             return null;
         }
-        if (!BooleanUtil.isTrue(redisHashTemplate.hasKey(RedisConstant.REDIS_KEY_SYS_DICT))) {
+        String redisKey = redisKey();
+        if (!BooleanUtil.isTrue(redisHashTemplate.hasKey(redisKey))) {
             refreshCache();
         }
         Map<String, SysDictItemFindVO> result = new HashMap<>();
         // 字典值
         List<String> valueList = queryVO.getValueList();
 
-        List<SysDictItemRedisBO> redisBOList = redisHashTemplate.get(RedisConstant.REDIS_KEY_SYS_DICT, dictKey);
+        List<SysDictItemRedisBO> redisBOList = redisHashTemplate.get(redisKey, dictKey);
 
         valueList.stream().distinct().forEach(values -> {
             SysDictItemRedisBO redisBO = SysDictItemRedisBO.findNode(redisBOList, values);
@@ -311,9 +320,9 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     }
 
     private <T> List<T> convertList(List<SysDictItemDTO> itemDTOList, Function<Tree<Long>, T> mapper) {
-        List<Tree<Long>> treeList = DataUtil.buildTree(itemDTOList, item ->
+        List<Tree<Long>> treeList = BeanUtil.buildTree(itemDTOList, item ->
                 new TreeNode<>(item.getId(), item.getParentId(), item.getLabel(), item.getSortOrder())
-                        .setExtra(BeanUtil.beanToMap(item)), rootId);
+                        .setExtra(cn.hutool.core.bean.BeanUtil.beanToMap(item)), rootId);
         return treeList.stream().map(mapper).collect(Collectors.toList());
     }
 
@@ -333,8 +342,8 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     }
 
     private SysDictItemTreeVO convertTreeVO(Tree<Long> tree) {
-        SysDictItemDTO sysDictItemDTO = BeanUtil.toBean(tree, SysDictItemDTO.class);
-        SysDictItemTreeVO sysDictItemTreeVO = DataUtil.toBean(sysDictItemDTO, SysDictItemTreeVO.class);
+        SysDictItemDTO sysDictItemDTO = cn.hutool.core.bean.BeanUtil.toBean(tree, SysDictItemDTO.class);
+        SysDictItemTreeVO sysDictItemTreeVO = BeanUtil.toBean(sysDictItemDTO, SysDictItemTreeVO.class);
         if (tree.hasChild()) {
             sysDictItemTreeVO.setChildren(tree.getChildren().stream().map(this::convertTreeVO).collect(Collectors.toList()));
         }
@@ -342,7 +351,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     }
 
     private SysDictItemCascaderVO convertCascaderVO(Tree<Long> tree) {
-        SysDictItemDTO sysDictItemDTO = BeanUtil.toBean(tree, SysDictItemDTO.class);
+        SysDictItemDTO sysDictItemDTO = cn.hutool.core.bean.BeanUtil.toBean(tree, SysDictItemDTO.class);
         SysDictItemCascaderVO sysDictItemCascaderVO = new SysDictItemCascaderVO().setValue(sysDictItemDTO.getId()).setLabel(sysDictItemDTO.getLabel());
         if (tree.hasChild()) {
             sysDictItemCascaderVO.setChildren(tree.getChildren().stream().map(this::convertCascaderVO).collect(Collectors.toList()));
@@ -351,14 +360,14 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     }
 
     private SysDictItemRedisBO convertRedisBO(Tree<Long> tree) {
-        SysDictItemDTO sysDictItemDTO = BeanUtil.toBean(tree, SysDictItemDTO.class);
+        SysDictItemDTO sysDictItemDTO = cn.hutool.core.bean.BeanUtil.toBean(tree, SysDictItemDTO.class);
         String value = sysDictItemDTO.getValue();
         String label = sysDictItemDTO.getLabel();
 
-        List<String> labelList = DataUtil.getParents(tree, node -> String.valueOf(node.getName()), true, rootId);
+        List<String> labelList = BeanUtil.getParents(tree, node -> String.valueOf(node.getName()), true, rootId);
         String labels = StrUtil.join("-", labelList);
 
-        List<String> valueList = DataUtil.getParents(tree, node -> BeanUtil.toBean(node, SysDictItemDTO.class).getValue(), true, rootId);
+        List<String> valueList = BeanUtil.getParents(tree, node -> cn.hutool.core.bean.BeanUtil.toBean(node, SysDictItemDTO.class).getValue(), true, rootId);
         String values = StrUtil.join("-", valueList);
 
         SysDictItemRedisBO sysDictItemRedisBO = new SysDictItemRedisBO().setLabel(label).setValue(value).setLabels(labels).setValues(values);
@@ -373,7 +382,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
             result.add(sysDictItemRedisBO.getValues());
         }
         List<SysDictItemRedisBO> childrenList = sysDictItemRedisBO.getChildren();
-        if (CollectionUtil.isNotEmpty(childrenList)) {
+        if (CollUtil.isNotEmpty(childrenList)) {
             childrenList.forEach(children -> dictValuesExpanded(result, children, predicate));
         }
     }
@@ -382,11 +391,11 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
         String labels = sysDictItemRedisBO.getLabels();
         List<SysDictItemRedisBO> childrenList = sysDictItemRedisBO.getChildren();
         boolean rootAdd = !BooleanUtil.isTrue(root) || !StrUtil.contains(labels, "-");
-        boolean lowestAdd = !BooleanUtil.isTrue(lowest) || CollectionUtil.isEmpty(childrenList);
+        boolean lowestAdd = !BooleanUtil.isTrue(lowest) || CollUtil.isEmpty(childrenList);
         if (rootAdd && lowestAdd) {
             result.add(labels);
         }
-        if (CollectionUtil.isNotEmpty(childrenList)) {
+        if (CollUtil.isNotEmpty(childrenList)) {
             childrenList.forEach(children -> dictLabelsExpanded(result, children, root, lowest));
         }
     }
@@ -394,7 +403,7 @@ public class SysDictItemServiceImpl extends MPJBaseServiceImpl<SysDictItemMapper
     private void dictMapExpanded(Map<String, String> result, SysDictItemRedisBO sysDictItemRedisBO, Function<SysDictItemRedisBO, String> key, Function<SysDictItemRedisBO, String> value) {
         List<SysDictItemRedisBO> childrenList = sysDictItemRedisBO.getChildren();
         result.put(key.apply(sysDictItemRedisBO), value.apply(sysDictItemRedisBO));
-        if (CollectionUtil.isNotEmpty(childrenList)) {
+        if (CollUtil.isNotEmpty(childrenList)) {
             childrenList.forEach(children -> dictMapExpanded(result, children, key, value));
         }
     }

@@ -28,6 +28,7 @@ SERVER_PORT=`sh $DEPLOY_DIR/server_port.sh`
 
 docker run -d --pull="always" --privileged="true" \
 -e NACOS_CONFIG_HOST=$NACOS_CONFIG_HOST \
+-e NACOS_CONFIG_GROUP=$NACOS_CONFIG_GROUP \
 -e NACOS_CONFIG_ENV=$NACOS_CONFIG_ENV \
 -e JVM_OPTIONS="-Xmx1024m \
     -Xms1024m \

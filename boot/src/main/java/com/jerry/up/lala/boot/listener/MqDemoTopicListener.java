@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = MqConstant.LALA_BOOT_CONSUMER, topic = MqConstant.DEMO_TOPIC)
+@RocketMQMessageListener(consumerGroup = MqConstant.DEMO_TOPIC_CONSUMER_GROUP, topic = MqConstant.DEMO_TOPIC)
 public class MqDemoTopicListener implements RocketMQListener<MqBO> {
 
     @Autowired

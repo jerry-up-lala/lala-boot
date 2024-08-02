@@ -4,9 +4,9 @@ import com.jerry.up.lala.boot.access.AccessConstant;
 import com.jerry.up.lala.boot.service.SysMenuService;
 import com.jerry.up.lala.boot.vo.SysMenuButtonVO;
 import com.jerry.up.lala.boot.vo.SysMenuRouteVO;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.R;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +28,7 @@ public class SysMenuCtrl {
     private SysMenuService sysMenuService;
 
     @GetMapping("/list")
-    @Api(value = "菜单管理-查询", accessCodes = AccessConstant.MENU)
+    @Api(value = "菜单管理-查询", accessCodes = {AccessConstant.MENU, AccessConstant.MENU_QUERY})
     public R<List<SysMenuButtonVO>> list(DataBody<String> dataBody) {
         List<SysMenuButtonVO> result = sysMenuService.list(dataBody);
         return R.succeed(result);

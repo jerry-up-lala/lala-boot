@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,11 +14,11 @@ import com.jerry.up.lala.boot.entity.SysGenTable;
 import com.jerry.up.lala.boot.mapper.SysGenTableMapper;
 import com.jerry.up.lala.boot.properties.GenProperties;
 import com.jerry.up.lala.boot.service.SysGenTableService;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +66,7 @@ public class SysGenTableServiceImpl extends ServiceImpl<SysGenTableMapper, SysGe
         }
         if (queryTableName) {
             List<SysGenTable> queryTableList = list(queryWrapper);
-            if (CollectionUtil.isEmpty(queryTableList)) {
+            if (CollUtil.isEmpty(queryTableList)) {
                 return PageUtil.emptyPage();
             }
             List<String> queryTableNameList = queryTableList.stream().map(SysGenTable::getTableName).collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class SysGenTableServiceImpl extends ServiceImpl<SysGenTableMapper, SysGe
         }
         IPage<InformationSchemaTableDTO> pageResult = getBaseMapper().page(page, queryDTO);
         List<InformationSchemaTableDTO> records = pageResult.getRecords();
-        if (CollectionUtil.isEmpty(records)) {
+        if (CollUtil.isEmpty(records)) {
             return PageUtil.emptyPage();
         }
         List<String> tableNameList = records.stream().map(InformationSchemaTableDTO::getTableName).collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class SysGenTableServiceImpl extends ServiceImpl<SysGenTableMapper, SysGe
 
     private Map<String, SysGenTable> sysGenTableMap(List<String> tableNameList) {
         List<SysGenTable> sysGenTableList = list(new LambdaQueryWrapper<SysGenTable>().in(SysGenTable::getTableName, tableNameList));
-        return CollectionUtil.isNotEmpty(sysGenTableList) ? sysGenTableList.stream()
+        return CollUtil.isNotEmpty(sysGenTableList) ? sysGenTableList.stream()
                 .collect(Collectors.toMap(SysGenTable::getTableName, Function.identity(), (key1, key2) -> key1)) : new HashMap<>(16);
     }
 
@@ -110,12 +110,12 @@ public class SysGenTableServiceImpl extends ServiceImpl<SysGenTableMapper, SysGe
         if (informationSchemaTableDTO == null) {
             return null;
         }
-        GenTableDTO genTableDTO = DataUtil.toBean(informationSchemaTableDTO, GenTableDTO.class);
+        GenTableDTO genTableDTO = BeanUtil.toBean(informationSchemaTableDTO, GenTableDTO.class);
 
         String tableName = informationSchemaTableDTO.getTableName();
         SysGenTable sysGenTable = tableMap.get(tableName);
         if (sysGenTable != null) {
-            DataUtil.copy(sysGenTable, genTableDTO);
+            BeanUtil.copy(sysGenTable, genTableDTO);
         } else {
             if (loadDefault) {
                 genTableDTO.setPackageName(genProperties.getPackageName());

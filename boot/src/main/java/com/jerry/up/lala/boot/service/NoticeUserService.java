@@ -5,8 +5,8 @@ import com.jerry.up.lala.boot.dto.NoticeUserQueryDTO;
 import com.jerry.up.lala.boot.dto.UserDTO;
 import com.jerry.up.lala.boot.entity.NoticeUser;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 import java.util.Map;

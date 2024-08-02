@@ -6,10 +6,10 @@ import com.jerry.up.lala.boot.entity.UserSetting;
 import com.jerry.up.lala.boot.mapper.UserSettingMapper;
 import com.jerry.up.lala.boot.service.UserSettingService;
 import com.jerry.up.lala.boot.vo.UserSettingVO;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class UserSettingServiceImpl extends ServiceImpl<UserSettingMapper, UserS
     public UserSettingVO info() {
         try {
             UserSetting userSetting = userSetting();
-            return DataUtil.toBean(userSetting, UserSettingVO.class);
+            return BeanUtil.toBean(userSetting, UserSettingVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -40,7 +40,7 @@ public class UserSettingServiceImpl extends ServiceImpl<UserSettingMapper, UserS
             if (add) {
                 userSetting = new UserSetting();
             }
-            DataUtil.copy(userSettingVO, userSetting);
+            BeanUtil.copy(userSettingVO, userSetting);
             if (add) {
                 userSetting.setCreateUser(SaTokenUtil.currentUser().getUserId());
                 userSetting.setCreateTime(new Date());

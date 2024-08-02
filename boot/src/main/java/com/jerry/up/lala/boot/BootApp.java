@@ -8,8 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 /**
  * <p>Description: 应用启动类
  *
- * DATA_PATH=/Users/jerry/root/root/data/lala;NACOS_CONFIG_HOST=192.168.27.240:18848;NACOS_CONFIG_ENV=env.192.168.27.240.yaml
- * DATA_PATH=/Users/jerry/root/root/data/lala;NACOS_CONFIG_HOST=192.168.35.61:8848;NACOS_CONFIG_ENV=env.192.168.35.61.yaml
+ * DATA_PATH=/Users/jerry/root/root/data/lala-boot;NACOS_CONFIG_HOST=192.168.35.61:8848;NACOS_CONFIG_GROUP=LALA_BOOT_GROUP;NACOS_CONFIG_ENV=env.192.168.35.61.yaml
  * @author FMJ
  * @date 2023/8/9 14:12
  */

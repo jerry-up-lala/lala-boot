@@ -1,12 +1,12 @@
 package com.jerry.up.lala.boot.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jerry.up.lala.boot.dto.GenTableQueryDTO;
 import com.jerry.up.lala.boot.dto.GenTableDTO;
+import com.jerry.up.lala.boot.dto.GenTableQueryDTO;
 import com.jerry.up.lala.boot.dto.InformationSchemaTableDTO;
 import com.jerry.up.lala.boot.entity.SysGenTable;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**

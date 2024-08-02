@@ -8,7 +8,7 @@
     <artifactId>boot</artifactId>
     <version>1.0.0</version>
 
-    <name>lala boot版本</name>
+    <name>lala SpringBoot版本</name>
 
     <properties>
         <lala-framework.version>1.0.0</lala-framework.version>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.jerry.up.lala.framework</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>framework-boot</artifactId>
             <version>${lala-framework.version}</version>
         </dependency>
     </dependencies>
@@ -85,6 +85,7 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>

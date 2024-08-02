@@ -1,10 +1,10 @@
 package com.jerry.up.lala.boot.dto;
 
 import com.jerry.up.lala.boot.entity.NoticeUser;
-import com.jerry.up.lala.boot.vo.NoticeUserAllVO;
 import com.jerry.up.lala.boot.vo.NoticeInfoUserVO;
+import com.jerry.up.lala.boot.vo.NoticeUserAllVO;
 import com.jerry.up.lala.boot.vo.NoticeUserVO;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

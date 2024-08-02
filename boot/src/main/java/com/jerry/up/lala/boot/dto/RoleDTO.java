@@ -2,8 +2,8 @@ package com.jerry.up.lala.boot.dto;
 
 import com.jerry.up.lala.boot.entity.Role;
 import com.jerry.up.lala.boot.vo.RoleInfoVO;
-import com.jerry.up.lala.framework.core.data.DataBean;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

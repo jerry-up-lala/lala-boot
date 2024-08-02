@@ -2,8 +2,8 @@ package com.jerry.up.lala.boot.component;
 
 import cn.hutool.http.HttpUtil;
 import com.jerry.up.lala.boot.bo.HttpBO;
-import com.jerry.up.lala.framework.core.redis.RedisLogAddBO;
-import com.jerry.up.lala.framework.core.redis.RedisLogComponent;
+import com.jerry.up.lala.framework.boot.redis.RedisLogAddBO;
+import com.jerry.up.lala.framework.boot.redis.RedisLogComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Async;

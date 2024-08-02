@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.vo;
 
 import com.jerry.up.lala.boot.entity.UserSetting;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 
 /**

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 public class SysLogRequestDTO extends SysLogRequest {
 
     /**
-     * 租户名称
+     * 集团名称
      */
     private String tenantName;
 

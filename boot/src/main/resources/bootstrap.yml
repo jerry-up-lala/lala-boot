@@ -5,16 +5,13 @@ spring:
     nacos:
       config:
         server-addr: ${NACOS_CONFIG_HOST:127.0.0.1:8848}
-        group: LALA_BOOT_GROUP
+        group: ${NACOS_CONFIG_GROUP:LALA_BOOT_GROUP}
         prefix: ${spring.application.name}
         file-extension: yaml
         extension-configs:
           - data-id: ${NACOS_CONFIG_ENV:env.local.yaml}
-            group: LALA_BOOT_GROUP
+            group: ${NACOS_CONFIG_GROUP:LALA_BOOT_GROUP}
             refresh: true
-          - data-id: framework.param.yaml
-            group: LALA_BOOT_GROUP
-            refresh: true
-          - data-id: framework.tool.yaml
-            group: LALA_BOOT_GROUP
+          - data-id: framework-boot.yaml
+            group: ${NACOS_CONFIG_GROUP:LALA_BOOT_GROUP}
             refresh: true

@@ -14,8 +14,8 @@
 package ${packageName}.vo;
 
 import ${packageName}.dto.${className}QueryDTO;
-import com.jerry.up.lala.framework.core.common.PageQuery;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.model.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;

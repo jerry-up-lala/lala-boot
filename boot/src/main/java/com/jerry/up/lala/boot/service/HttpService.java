@@ -3,7 +3,7 @@ package com.jerry.up.lala.boot.service;
 
 import com.jerry.up.lala.boot.bo.HttpBO;
 import com.jerry.up.lala.boot.vo.HttpSendVO;
-import com.jerry.up.lala.framework.core.redis.RedisLogInfoBO;
+import com.jerry.up.lala.framework.boot.redis.RedisLogInfoBO;
 
 /**
  * <p>Description: http请求service

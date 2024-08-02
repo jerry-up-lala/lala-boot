@@ -2,7 +2,6 @@ package com.jerry.up.lala.boot.mapper;
 
 import com.github.yulichang.base.MPJBaseMapper;
 import com.jerry.up.lala.boot.entity.SysDictItem;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
 * @author jerry

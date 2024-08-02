@@ -1,8 +1,7 @@
 package com.jerry.up.lala.boot.dto;
 
-import com.jerry.up.lala.boot.vo.CrudQueryVO;
 import com.jerry.up.lala.boot.vo.RoleQueryVO;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

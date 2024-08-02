@@ -13,17 +13,17 @@
 #end
 package ${packageName}.ctrl;
 
-import ${packageName}.access.AccessConstant;
+import ${packageName}.access.${className}AccessConstant;
 import ${packageName}.service.${className}Service;
 import ${packageName}.vo.${className}ExportQueryVO;
 import ${packageName}.vo.${className}InfoVO;
 import ${packageName}.vo.${className}QueryVO;
 import ${packageName}.vo.${className}SaveVO;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.common.R;
-import com.jerry.up.lala.framework.core.excel.ExcelUtil;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.r.R;
+import com.jerry.up.lala.framework.boot.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,61 +45,61 @@ public class ${className}Ctrl {
     private ${className}Service ${lowerFirstClassName}Service;
 
     @GetMapping("/page")
-    @Api(value = "${functionName}-查询", accessCodes = {AccessConstant.${upperCaseClassName}, AccessConstant.${upperCaseClassName}_QUERY})
+    @Api(value = "${functionName}-查询", accessCodes = {${className}AccessConstant.${upperCaseClassName}, ${className}AccessConstant.${upperCaseClassName}_QUERY})
     public R<PageR<${className}InfoVO>> page(${className}QueryVO ${lowerFirstClassName}QueryVO) {
         PageR<${className}InfoVO> pageR = ${lowerFirstClassName}Service.pageQuery(${lowerFirstClassName}QueryVO);
         return R.succeed(pageR);
     }
 
     @GetMapping("/info/{$Key_Field_Name}")
-    @Api(value = "${functionName}-详情", accessCodes = {AccessConstant.${upperCaseClassName}_ADD, AccessConstant.${upperCaseClassName}_UPDATE})
+    @Api(value = "${functionName}-详情", accessCodes = {${className}AccessConstant.${upperCaseClassName}_ADD, ${className}AccessConstant.${upperCaseClassName}_UPDATE})
     public R<${className}InfoVO> info(@PathVariable("${Key_Field_Name}") ${Key_Field_Type} ${Key_Field_Name}) {
         ${className}InfoVO ${lowerFirstClassName}InfoVO = ${lowerFirstClassName}Service.info(${Key_Field_Name});
         return R.succeed(${lowerFirstClassName}InfoVO);
     }
 
     @PostMapping
-    @Api(value = "${functionName}-新增", accessCodes = AccessConstant.${upperCaseClassName}_ADD)
+    @Api(value = "${functionName}-新增", accessCodes = ${className}AccessConstant.${upperCaseClassName}_ADD)
     public R add(@RequestBody ${className}SaveVO ${lowerFirstClassName}SaveVO) {
         ${lowerFirstClassName}Service.add(${lowerFirstClassName}SaveVO);
         return R.empty();
     }
 
     @PutMapping("/{$Key_Field_Name}")
-    @Api(value = "${functionName}-编辑", accessCodes = AccessConstant.${upperCaseClassName}_UPDATE)
+    @Api(value = "${functionName}-编辑", accessCodes = ${className}AccessConstant.${upperCaseClassName}_UPDATE)
     public R update(@PathVariable("${Key_Field_Name}") ${Key_Field_Type} ${Key_Field_Name}, @RequestBody ${className}SaveVO ${lowerFirstClassName}SaveVO) {
         ${lowerFirstClassName}Service.update(${Key_Field_Name}, ${lowerFirstClassName}SaveVO);
         return R.empty();
     }
 
     @GetMapping(value = "/excel")
-    @Api(value = "${functionName}-模板下载", accessCodes = AccessConstant.${upperCaseClassName}_UPLOAD)
+    @Api(value = "${functionName}-模板下载", accessCodes = ${className}AccessConstant.${upperCaseClassName}_UPLOAD)
     public Object excel() {
-        return ExcelUtil.download("excel" + File.separator + "${lowerFirstClassName}.xlsx", "${lowerFirstClassName}导入模板.xlsx");
+        return ExcelUtil.template("excel" + File.separator + "${lowerFirstClassName}.xlsx", "${lowerFirstClassName}导入模板.xlsx");
     }
 
     @PostMapping(value = "/upload")
-    @Api(value = "${functionName}-上传", accessCodes = AccessConstant.${upperCaseClassName}_UPLOAD)
+    @Api(value = "${functionName}-上传", accessCodes = ${className}AccessConstant.${upperCaseClassName}_UPLOAD)
     public R upload(@RequestParam(value = "file") MultipartFile file) {
         Integer result = ${lowerFirstClassName}Service.upload(file);
         return R.succeed(result);
     }
 
     @GetMapping(value = "/export")
-    @Api(value = "${functionName}-导出", accessCodes = AccessConstant.${upperCaseClassName}_EXPORT)
+    @Api(value = "${functionName}-导出", accessCodes = ${className}AccessConstant.${upperCaseClassName}_EXPORT)
     public Object export(${className}ExportQueryVO ${lowerFirstClassName}ExportQueryVO) {
         return ${lowerFirstClassName}Service.export(${lowerFirstClassName}ExportQueryVO);
     }
 
     @DeleteMapping("/{$Key_Field_Name}")
-    @Api(value = "${functionName}-删除", accessCodes = AccessConstant.${upperCaseClassName}_DELETE)
+    @Api(value = "${functionName}-删除", accessCodes = ${className}AccessConstant.${upperCaseClassName}_DELETE)
     public R delete(@PathVariable("${Key_Field_Name}") ${Key_Field_Type} ${Key_Field_Name}) {
         ${lowerFirstClassName}Service.delete(${Key_Field_Name});
         return R.empty();
     }
 
     @DeleteMapping
-    @Api(value = "${functionName}-批量删除", accessCodes = AccessConstant.${upperCaseClassName}_BATCH_DELETE)
+    @Api(value = "${functionName}-批量删除", accessCodes = ${className}AccessConstant.${upperCaseClassName}_BATCH_DELETE)
     public R batchDelete(@RequestBody DataBody<List<${Key_Field_Type}>> dataBody) {
         ${lowerFirstClassName}Service.batchDelete(dataBody);
         return R.empty();

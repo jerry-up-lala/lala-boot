@@ -1,8 +1,8 @@
 package com.jerry.up.lala.boot.vo;
 
 import com.jerry.up.lala.boot.dto.SysLogRequestQueryDTO;
-import com.jerry.up.lala.framework.core.common.PageQuery;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.model.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
@@ -47,7 +47,7 @@ public class SysLogRequestQueryVO extends PageQuery {
     private String clientIp;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private List<String> tenantIds;
 

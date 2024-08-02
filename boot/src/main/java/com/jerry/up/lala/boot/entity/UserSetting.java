@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jerry.up.lala.boot.vo.UserSettingVO;
-import com.jerry.up.lala.framework.core.common.Entity;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.boot.entity.Entity;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -29,7 +29,7 @@ public class UserSetting extends Entity {
     private Long id;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private String tenantId;
 

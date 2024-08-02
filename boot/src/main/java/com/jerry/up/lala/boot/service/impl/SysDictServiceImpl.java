@@ -11,12 +11,12 @@ import com.jerry.up.lala.boot.service.SysDictService;
 import com.jerry.up.lala.boot.vo.SysDictInfoVO;
 import com.jerry.up.lala.boot.vo.SysDictSaveVO;
 import com.jerry.up.lala.boot.vo.SysDictVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
                 }
             }
             List<SysDict> sysDictList = list(queryWrapper);
-            return DataUtil.toBeanList(sysDictList, SysDictVO.class);
+            return BeanUtil.toBeanList(sysDictList, SysDictVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -54,7 +54,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     @Override
     public SysDictInfoVO info(Long id) {
         SysDict sysDict = get(id);
-        return DataUtil.toBean(sysDict, SysDictInfoVO.class);
+        return BeanUtil.toBean(sysDict, SysDictInfoVO.class);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     public void add(SysDictSaveVO sysDictSaveVO) {
         checkSaveVO(null, sysDictSaveVO);
         try {
-            SysDict sysDict = DataUtil.toBean(sysDictSaveVO, SysDict.class);
+            SysDict sysDict = BeanUtil.toBean(sysDictSaveVO, SysDict.class);
             save(sysDict);
             refreshCache();
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
         checkSaveVO(id, sysDictSaveVO);
         SysDict oldSysDict = get(id);
         try {
-            DataUtil.copy(sysDictSaveVO, oldSysDict);
+            BeanUtil.copy(sysDictSaveVO, oldSysDict);
             updateById(oldSysDict);
             refreshCache();
         } catch (Exception e) {

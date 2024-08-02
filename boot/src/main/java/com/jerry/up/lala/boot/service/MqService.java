@@ -2,9 +2,7 @@ package com.jerry.up.lala.boot.service;
 
 import com.jerry.up.lala.boot.bo.MqBO;
 import com.jerry.up.lala.boot.vo.MqVO;
-import com.jerry.up.lala.framework.core.redis.RedisLogInfoBO;
-
-import java.util.List;
+import com.jerry.up.lala.framework.boot.redis.RedisLogInfoBO;
 
 /**
  * <p>Description: 通知管理service

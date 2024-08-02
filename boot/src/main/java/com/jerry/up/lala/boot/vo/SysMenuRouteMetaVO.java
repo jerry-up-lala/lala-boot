@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.vo;
 
 import com.jerry.up.lala.boot.entity.SysMenu;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

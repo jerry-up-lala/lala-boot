@@ -2,8 +2,8 @@ package com.jerry.up.lala.boot.bo;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.jerry.up.lala.boot.vo.SysDictItemFindVO;
-import com.jerry.up.lala.framework.core.data.DataBean;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

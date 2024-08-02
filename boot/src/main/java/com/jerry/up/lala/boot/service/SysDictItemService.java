@@ -3,7 +3,6 @@ package com.jerry.up.lala.boot.service;
 import com.github.yulichang.base.MPJBaseService;
 import com.jerry.up.lala.boot.bo.SysDictItemRedisBO;
 import com.jerry.up.lala.boot.bo.SysDictItemVerifyBO;
-import com.jerry.up.lala.boot.entity.SysDict;
 import com.jerry.up.lala.boot.entity.SysDictItem;
 import com.jerry.up.lala.boot.enums.SysDictKey;
 import com.jerry.up.lala.boot.vo.*;

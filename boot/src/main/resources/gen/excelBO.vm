@@ -14,8 +14,8 @@
 package ${packageName}.bo;
 
 import ${packageName}.entity.${className};
-import com.jerry.up.lala.framework.core.data.DataBean;
-import com.jerry.up.lala.framework.core.excel.ExcelFormat;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.boot.excel.ExcelFormat;
 import lombok.Data;
 #if($Import_BigDecimal)
 import java.math.BigDecimal;

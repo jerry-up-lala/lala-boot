@@ -4,10 +4,10 @@ import com.jerry.up.lala.boot.service.NoticeUserService;
 import com.jerry.up.lala.boot.vo.NoticeInfoUserVO;
 import com.jerry.up.lala.boot.vo.NoticeUserQueryVO;
 import com.jerry.up.lala.boot.vo.NoticeUserVO;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.common.R;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.r.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

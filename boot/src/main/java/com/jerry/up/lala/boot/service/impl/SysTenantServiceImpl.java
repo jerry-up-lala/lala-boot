@@ -1,6 +1,5 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,18 +13,18 @@ import com.jerry.up.lala.boot.mapper.SysTenantMapper;
 import com.jerry.up.lala.boot.service.SysTenantService;
 import com.jerry.up.lala.boot.service.UserService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.tenant.TenantContext;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.crypto.RSAUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.crypto.RSAUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.boot.tenant.TenantContext;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ import java.util.List;
 
 /**
  * @author jerry
- * @description 针对表【sys_tenant(租户表)】的数据库操作Service实现
+ * @description 针对表【sys_tenant(集团表)】的数据库操作Service实现
  * @createDate 2023-09-18 16:19:50
  */
 @Service
@@ -61,7 +60,7 @@ public class SysTenantServiceImpl extends MPJBaseServiceImpl<SysTenantMapper, Sy
         try {
             MPJLambdaWrapper<SysTenant> query = loadQuery(sysTenantQueryVO);
             List<SysTenantDTO> tenantList = selectJoinList(SysTenantDTO.class, query);
-            return BeanUtil.copyToList(tenantList, SysTenantInfoVO.class);
+            return BeanUtil.toBeanList(tenantList, SysTenantInfoVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -101,7 +100,7 @@ public class SysTenantServiceImpl extends MPJBaseServiceImpl<SysTenantMapper, Sy
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(SysSysTenantAddVO sysTenantAddVO) {
+    public void add(SysTenantAddVO sysTenantAddVO) {
         checkSaveArg(sysTenantAddVO);
         UserSaveVO userSaveVO = sysTenantAddVO.getUser();
         userService.checkUserSaveArg(userSaveVO);
@@ -113,7 +112,7 @@ public class SysTenantServiceImpl extends MPJBaseServiceImpl<SysTenantMapper, Sy
             sysTenant.setCreateUser(SaTokenUtil.currentUser().getUserId());
             save(sysTenant);
             // 新增集团管理员
-            User user = DataUtil.toBean(userSaveVO, User.class);
+            User user = BeanUtil.toBean(userSaveVO, User.class);
             TenantContext.setTenantId(sysTenant.getId());
             user.setPassWord(RSAUtil.encrypt(user.getPassWord()));
             user.setState(true);

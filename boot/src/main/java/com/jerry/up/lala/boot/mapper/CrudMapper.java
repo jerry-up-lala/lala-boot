@@ -3,6 +3,7 @@ package com.jerry.up.lala.boot.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jerry.up.lala.boot.entity.Crud;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.Collection;
 
 /**

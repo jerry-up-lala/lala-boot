@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.lang.func.LambdaUtil;
@@ -18,23 +18,26 @@ import com.jerry.up.lala.boot.dto.CrudQueryDTO;
 import com.jerry.up.lala.boot.entity.Crud;
 import com.jerry.up.lala.boot.enums.SysDictKey;
 import com.jerry.up.lala.boot.mapper.CrudMapper;
+import com.jerry.up.lala.boot.properties.UploadProperties;
 import com.jerry.up.lala.boot.service.CrudService;
 import com.jerry.up.lala.boot.service.SysDictItemService;
 import com.jerry.up.lala.boot.vo.CrudExportQueryVO;
 import com.jerry.up.lala.boot.vo.CrudInfoVO;
 import com.jerry.up.lala.boot.vo.CrudQueryVO;
 import com.jerry.up.lala.boot.vo.CrudSaveVO;
-import com.jerry.up.lala.framework.core.common.*;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.excel.ExcelCheckErrorBO;
-import com.jerry.up.lala.framework.core.excel.ExcelUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.excel.ExcelCheckErrorBO;
+import com.jerry.up.lala.framework.boot.excel.ExcelUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.model.PageQuery;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,17 +56,14 @@ import java.util.stream.Collectors;
 public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements CrudService {
 
     @Autowired
-    private CommonProperties commonProperties;
-
-    @Autowired
-    private MultipartProperties multipartProperties;
+    private UploadProperties uploadProperties;
 
     @Autowired
     private SysDictItemService sysDictItemService;
 
     @Override
     public PageR<CrudInfoVO> pageQuery(CrudQueryVO crudQueryVO) {
-        CrudQueryDTO queryDTO = DataUtil.toBean(crudQueryVO, CrudQueryDTO.class);
+        CrudQueryDTO queryDTO = BeanUtil.toBean(crudQueryVO, CrudQueryDTO.class);
         IPage<Crud> pageResult = pageByDTO(crudQueryVO, queryDTO);
         try {
             return PageUtil.toPageR(pageResult, CrudInfoVO.class);
@@ -75,14 +75,14 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
     @Override
     public CrudInfoVO info(String id) {
         Crud crud = get(id);
-        return DataUtil.toBean(crud, CrudInfoVO.class);
+        return BeanUtil.toBean(crud, CrudInfoVO.class);
     }
 
     @Override
     public void add(CrudSaveVO crudSaveVO) {
         checkCrudSaveVO(crudSaveVO);
         try {
-            Crud crud = DataUtil.toBean(crudSaveVO, Crud.class);
+            Crud crud = BeanUtil.toBean(crudSaveVO, Crud.class);
             save(crud);
         } catch (Exception e) {
             throw ServiceException.error(Errors.SAVE_ERROR, e);
@@ -94,7 +94,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
         checkCrudSaveVO(crudSaveVO);
         Crud oldCrud = get(id);
         try {
-            DataUtil.copy(crudSaveVO, oldCrud);
+            BeanUtil.copy(crudSaveVO, oldCrud);
             updateById(oldCrud);
         } catch (Exception e) {
             throw ServiceException.error(Errors.UPDATE_ERROR, e);
@@ -139,7 +139,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
 
             List<Crud> crudList = uploadList.stream().map(
                     item -> {
-                        Crud crud = DataUtil.toBean(item, Crud.class);
+                        Crud crud = BeanUtil.toBean(item, Crud.class);
                         crud.setId(IdWorker.getIdStr());
                         crud.setSwitchInfo(stateLabelValueMap.get(item.getSwitchInfo()));
 
@@ -149,8 +149,8 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
                         crud.setCascader(treeLabelValueMap.get(item.getCascader()));
                         crud.setTreeSelect(treeLabelValueMap.get(item.getTreeSelect()));
 
-                        crud.setCheckboxes(DataUtil.valuesStr(item.getCheckboxes(), listLabelValueMap));
-                        crud.setTransfers(DataUtil.valuesStr(item.getTransfers(), treeLabelValueMap));
+                        crud.setCheckboxes(BeanUtil.valuesStr(item.getCheckboxes(), listLabelValueMap));
+                        crud.setTransfers(BeanUtil.valuesStr(item.getTransfers(), treeLabelValueMap));
                         crud.setCreateUser(SaTokenUtil.currentUser().getUserId());
                         crud.setCreateTime(new Date());
                         crud.setDeleted(false);
@@ -158,7 +158,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
                     }
             ).collect(Collectors.toList());
 
-            List<List<Crud>> partitionList = ListUtil.partition(crudList, commonProperties.getUpload().getPartition());
+            List<List<Crud>> partitionList = ListUtil.partition(crudList, uploadProperties.getPartition());
 
             partitionList.forEach(item -> getBaseMapper().insertBatch(item));
 
@@ -170,10 +170,10 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
 
     @Override
     public Object export(CrudExportQueryVO crudExportQueryVO) {
-        CrudQueryDTO queryDTO = DataUtil.toBean(crudExportQueryVO, CrudQueryDTO.class);
+        CrudQueryDTO queryDTO = BeanUtil.toBean(crudExportQueryVO, CrudQueryDTO.class);
         List<Crud> list = BooleanUtil.isTrue(crudExportQueryVO.getCurrentPage()) ?
                 pageByDTO(crudExportQueryVO, queryDTO.setIds(null)).getRecords() : listByDTO(queryDTO);
-        if (CollectionUtil.isEmpty(list)) {
+        if (CollUtil.isEmpty(list)) {
             throw ServiceException.error(Errors.EXPORT_EMPTY_ERROR);
         }
         Map<String, String> listValueLabelMap = sysDictItemService.valueLabelMap(SysDictKey.CRUD_LIST);
@@ -184,13 +184,13 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
 
 
         List<CrudExcelBO> exportList = list.stream().map(item -> {
-            CrudExcelBO crudExcelBO = DataUtil.toBean(item, CrudExcelBO.class);
+            CrudExcelBO crudExcelBO = BeanUtil.toBean(item, CrudExcelBO.class);
             // 开关(STATE),单选
             crudExcelBO.setSwitchInfo(stateValueLabelMap.get(String.valueOf(item.getSwitchInfo())));
             // 单选框(CRUD_LIST),单选
             crudExcelBO.setRadio(listValueLabelMap.get(String.valueOf(item.getRadio())));
             // 复选框(CRUD_LIST),多选
-            crudExcelBO.setCheckboxes(DataUtil.valuesStr(item.getCheckboxes(), listValueLabelMap));
+            crudExcelBO.setCheckboxes(BeanUtil.valuesStr(item.getCheckboxes(), listValueLabelMap));
             // 选择器(CRUD_LIST),单选
             crudExcelBO.setSelectInfo(listValueLabelMap.get(String.valueOf(item.getSelectInfo())));
             // 级联选择(CRUD_TREE),单选
@@ -198,7 +198,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
             // 树选择(CRUD_TREE),单选
             crudExcelBO.setTreeSelect(treeValueLabelMap.get(item.getTreeSelect()));
             // 数据穿梭框(CRUD_LIST),多选
-            crudExcelBO.setTransfers(DataUtil.valuesStr(item.getTransfers(), listValueLabelMap));
+            crudExcelBO.setTransfers(BeanUtil.valuesStr(item.getTransfers(), listValueLabelMap));
             return crudExcelBO;
         }).collect(Collectors.toList());
 
@@ -250,7 +250,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
         LambdaQueryWrapper<Crud> queryWrapper = new LambdaQueryWrapper<>();
         if (crudQueryDTO != null) {
             List<String> ids = crudQueryDTO.getIds();
-            if (CollectionUtil.isNotEmpty(ids)) {
+            if (CollUtil.isNotEmpty(ids)) {
                 queryWrapper.in(Crud::getId, ids);
             }
             String input = crudQueryDTO.getInput();
@@ -269,7 +269,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
             }
 
             List<String> inputTagList = crudQueryDTO.getInputTagList();
-            if (CollectionUtil.isNotEmpty(inputTagList)) {
+            if (CollUtil.isNotEmpty(inputTagList)) {
                 inputTagList.forEach(item -> queryWrapper.apply(" FIND_IN_SET(" + item + ", input_tags) "));
             }
 
@@ -314,28 +314,28 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
             }
 
             List<String> radioList = crudQueryDTO.getRadioList();
-            if (CollectionUtil.isNotEmpty(radioList)) {
+            if (CollUtil.isNotEmpty(radioList)) {
                 queryWrapper.in(Crud::getRadio, radioList);
             }
 
             List<String> checkboxList = crudQueryDTO.getCheckboxList();
-            if (CollectionUtil.isNotEmpty(checkboxList)) {
+            if (CollUtil.isNotEmpty(checkboxList)) {
                 queryWrapper.apply(checkboxList.stream().map(item -> " FIND_IN_SET(" + item + ", checkboxes) ")
                         .collect(Collectors.joining(" or ")));
             }
 
             List<String> selectInfoList = crudQueryDTO.getSelectInfoList();
-            if (CollectionUtil.isNotEmpty(selectInfoList)) {
+            if (CollUtil.isNotEmpty(selectInfoList)) {
                 queryWrapper.in(Crud::getSelectInfo, selectInfoList);
             }
 
             List<String> cascaderList = crudQueryDTO.getCascaderList();
-            if (CollectionUtil.isNotEmpty(cascaderList)) {
+            if (CollUtil.isNotEmpty(cascaderList)) {
                 queryWrapper.in(Crud::getCascader, sysDictItemService.dictValuesList(SysDictKey.CRUD_TREE, cascaderList));
             }
 
             List<String> treeSelectList = crudQueryDTO.getTreeSelectList();
-            if (CollectionUtil.isNotEmpty(treeSelectList)) {
+            if (CollUtil.isNotEmpty(treeSelectList)) {
                 queryWrapper.in(Crud::getTreeSelect, sysDictItemService.dictValuesList(SysDictKey.CRUD_TREE, treeSelectList));
             }
 
@@ -350,7 +350,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
             }
 
             List<String> transferList = crudQueryDTO.getTransferList();
-            if (CollectionUtil.isNotEmpty(transferList)) {
+            if (CollUtil.isNotEmpty(transferList)) {
                 queryWrapper.apply(sysDictItemService.dictValuesList(SysDictKey.CRUD_TREE, transferList)
                         .stream().map(item -> " FIND_IN_SET(" + item + ", transfers) ")
                         .collect(Collectors.joining(" or ")));
@@ -361,11 +361,11 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
     }
 
     private String checkUpload(List<CrudExcelBO> uploadList) {
-        if (CollectionUtil.isEmpty(uploadList)) {
+        if (CollUtil.isEmpty(uploadList)) {
             return StringUtil.fontRed("导入数据不能为空");
         }
-        Integer max = commonProperties.getUpload().getMax();
-        if (uploadList.size() > commonProperties.getUpload().getMax()) {
+        Integer max = uploadProperties.getMax();
+        if (uploadList.size() > uploadProperties.getMax()) {
             return StringUtil.fontRed("导入数据不能超过" + max + "条");
         }
         List<String> stateLabels = sysDictItemService.dictLabelsList(SysDictKey.STATE);
@@ -401,7 +401,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
                 }
                 return null;
             });
-            if (CollectionUtil.isNotEmpty(rowCheckList)) {
+            if (CollUtil.isNotEmpty(rowCheckList)) {
                 for (ExcelCheckErrorBO rowCheck : rowCheckList) {
                     result.append(ExcelUtil.checkMessage(i + 1, rowCheck));
                 }
@@ -413,7 +413,7 @@ public class CrudServiceImpl extends ServiceImpl<CrudMapper, Crud> implements Cr
     private ExcelCheckErrorBO checkCrudLabel(List<String> labelList, Object value) {
         String checkValue = ObjectUtil.toString(value);
         if (StringUtil.isNotNull(checkValue)) {
-            if (!CollectionUtil.contains(labelList, checkValue)) {
+            if (!CollUtil.contains(labelList, checkValue)) {
                 return new ExcelCheckErrorBO().setValue(checkValue).setErrorMessage("必须为" + StrUtil.join(",", labelList));
             }
         }

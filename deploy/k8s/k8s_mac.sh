@@ -23,6 +23,7 @@ rm -rf $DEPLOY_DIR/start.sh $DEPLOY_DIR/stop.sh $DEPLOY_DIR/k8s.properties $DEPL
 cp ./start.sh ./stop.sh ./k8s.properties ./boot.yaml $DEPLOY_DIR/
 
 sed -i "" "s/{{NACOS_CONFIG_HOST}}/$NACOS_CONFIG_HOST/g" $DEPLOY_DIR/boot.yaml
+sed -i "s/{{NACOS_CONFIG_GROUP}}/$NACOS_CONFIG_GROUP/g" $DEPLOY_DIR/boot.yaml
 sed -i "" "s/{{NACOS_CONFIG_ENV}}/$NACOS_CONFIG_ENV/g" $DEPLOY_DIR/boot.yaml
 sed -i "" "s/{{POM_VERSION}}/$POM_VERSION/g" $DEPLOY_DIR/boot.yaml
 

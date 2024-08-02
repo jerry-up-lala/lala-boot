@@ -1,18 +1,19 @@
 <!-- markdownlint-disable -->
+
 <p align="center">
   <img width="100" src="./assets/logo.svg" style="text-align: center;">
 </p>
-<h1 align="center">jerry-up · lala · lala boot</h1>
-<h4 align="center">Spring Boot 架构的服务端</h4>
+<h1 align="center">jerry-up · lala · lala-boot</h1>
+<h4 align="center">springboot架构的服务端，基于lala-framework提供各种常见的后端功能样例</h4>
 <p align="center">
-    <img alt="boot" src="https://img.shields.io/badge/boot-1.0.0-green">
+    <img alt="boot" src="./assets/boot-1.0.0-green.svg">
     <a href="./LICENSE" target="_blank">
-        <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
+        <img alt="license" src="./assets/license-MIT-green.svg">
     </a>
 </p>
 <p align="center">
-    <a href="https://docs.spring.io/spring-boot/docs/2.7.14/reference/html" target="_blank">
-        <img alt="framework" src="https://img.shields.io/badge/framework-1.0.0-blue?logo=framework">
+    <a href="https://github.com/jerry-up-lala/lala-framework" target="_blank">
+        <img alt="framework" src="./assets/framework-1.0.0-blue.svg">
     </a>
 </p>
 
@@ -22,8 +23,8 @@
 
 | 项目                                                   | 仓库地址                                            | 说明                     |
 | ------------------------------------------------------ | ------------------------ | ------------------------ |
-| framework | [![framework#gitee](https://img.shields.io/badge/gitee-snow?logo=Gitee&logoColor=crimson)](https://gitee.com/jerry_up_lala/lala-framework) [![framework#github](https://img.shields.io/badge/github-snow?logo=Github&logoColor=black)](https://github.com/jerry-up-lala/lala-framework)| 基础框架     |
-| lala-boot-web | [![lala-boot-web#gitee](https://img.shields.io/badge/gitee-snow?logo=Gitee&logoColor=crimson)](https://gitee.com/jerry_up_lala/lala-boot-web) [![lala-boot-web#github](https://img.shields.io/badge/github-snow?logo=Github&logoColor=black)](https://github.com/jerry-up-lala/lala-boot-web) | 配套前端 |
+| framework | [![framework#gitee](./assets/gitee-snow.svg)](https://gitee.com/jerry_up_lala/lala-framework) [![framework#github](./assets/github-snow.svg)](https://github.com/jerry-up-lala/lala-framework)| 基础框架     |
+| lala-boot-web | [![lala-boot-web#gitee](./assets/gitee-snow.svg)](https://gitee.com/jerry_up_lala/lala-boot-web) [![lala-boot-web#github](./assets/github-snow.svg)](https://github.com/jerry-up-lala/lala-boot-web) | 配套前端 |
 
 ## 2. 目录说明
 
@@ -36,21 +37,21 @@ lala-boot
     │      └─main
     │        └─java
     │        |   └─com.jerry.up.lala.boot
-    │        |      │  ├─access #访问权限码
-    │        |      │  ├─bo #业务对象
-    │        |      │  ├─component #组件
-    │        |      │  ├─config #配置
-    │        |      │  ├─constant #常量
-    │        |      │  ├─ctrl #控制层
-    │        |      │  ├─dto #数据交互对象
-    │        |      │  ├─entity #实体
-    │        |      │  ├─enums #枚举
-    │        |      │  ├─error #错误码
-    │        |      │  ├─listener #监听
-    │        |      │  ├─mapper #mapper
-    │        |      │  ├─properties #配置
-    │        |      │  ├─service #业务层
-    │        |      │  └─vo #视图对象
+    │        |      ├─access #访问权限码
+    │        |      ├─bo #业务对象
+    │        |      ├─component #组件
+    │        |      ├─config #配置
+    │        |      ├─constant #常量
+    │        |      ├─ctrl #控制层
+    │        |      ├─dto #数据交互对象
+    │        |      ├─entity #实体
+    │        |      ├─enums #枚举
+    │        |      ├─error #错误码
+    │        |      ├─listener #监听
+    │        |      ├─mapper #mapper
+    │        |      ├─properties #配置
+    │        |      ├─service #业务层
+    │        |      ├─vo #视图对象
     │        |      └──**App #服务启动类  
     │        └──resources
     │               ├─excel #Excel模板文件
@@ -67,7 +68,7 @@ lala-boot
     └──sql #sql脚本
 ```
 
-## 3. 包含功能
+## 3. 功能列表
 
 | 功能       | 说明                                                         |
 | ---------- | ------------------------------------------------------------ |
@@ -85,7 +86,7 @@ lala-boot
 
 ### 4.1. 安装中间件
 
-> 可通过[lala-tool](https://gitee.com/jerry_up_lala/lala-tool)基于docker或者参照[中间件安装](https://jerry-up-blog.pages.dev/tool/middleware/)初始化环境，亦可自行安装如下版本中间件。
+> 可通过[lala-boot-tool](https://github.com/jerry-up-lala/lala-boot-tool)基于docker或者参照[中间件安装](https://jerry-up-blog.pages.dev/tool/middleware/)初始化环境，亦可自行安装如下版本中间件。
 
 | 名称                                        | 版本                                                         |
 | ------------------------------------------- | ------------------------------------------------------------ |
@@ -115,6 +116,20 @@ mysql -h127.0.0.1 -P3306 -uroot -p123456 < ./sql/v1.0.0.sql
 
    | 配置项 | 说明 |
    | ------ | ---- |
+   |env.mail.host|邮件发信主机|
+   |env.mail.port|邮件发信端口|
+   |env.mail.from|邮件发信人邮箱|
+   |env.mail.user|邮件发信人账号|
+   |env.mail.pass|邮件发信人密码|
+   |env.mail.subjectPrefix|邮件发信主题|
+   |env.error.catchPrint|捕获异常打印|
+   |env.error.servicePrint|业务异常打印|
+   |env.error.runTimePrint|运行时异常打印|
+   |env.error.mailOpen|异常是否邮件提醒|
+   |env.error.mailLevel|异常邮件提醒级别|
+   |env.error.mailReceivers|异常邮件收件人|
+   |env.log.mq|请求日志是否发送至消息队列|
+   |env.log.print|请求日志是否打印|
    |env.mysql.host|MySQL地址|
    |env.mysql.username|MySQL用户名|
    |env.mysql.password|MySQL密码|
@@ -125,33 +140,17 @@ mysql -h127.0.0.1 -P3306 -uroot -p123456 < ./sql/v1.0.0.sql
    |env.druid.password|Druid密码|
    |env.token.activityTimeout|最低活跃频率，单位/秒|
    |env.token.jwtSecretKey|jwt秘钥|
-   |env.token.redis.host|Sa-Token独立使用的Redis地址|
-   |env.token.redis.port|Sa-Token独立使用的Redis端口|
-   |env.token.redis.password|Sa-Token独立使用的Redis密码|
-   |env.token.redis.database|Sa-Token独立使用的Redis数据库索引|
+   |env.token.redisHost|Sa-Token独立使用的Redis地址|
+   |env.token.redisPort|Sa-Token独立使用的Redis端口|
+   |env.token.redisPassword|Sa-Token独立使用的Redis密码|
+   |env.token.redisDatabase|Sa-Token独立使用的Redis数据库索引|
    |env.access|接口是否校验访问权限|
-   |env.log.mq|请求日志是否发送至消息队列|
-   |env.log.print|请求日志是否打印|
-   |env.mail.host|邮件发信主机|
-   |env.mail.port|邮件发信端口|
-   |env.mail.from|邮件发信人邮箱|
-   |env.mail.user|邮件发信人账号|
-   |env.mail.pass|邮件发信人密码|
-   |env.mail.subjectPrefix|邮件发信主题|
    |env.upload.max|上传Excel最大条数|
    |env.upload.partition|上传Excel批量处理分区大小|
-   |env.error.catchPrint|捕获异常打印|
-   |env.error.servicePrint|业务异常打印|
-   |env.error.runTimePrint|运行时异常打印|
-   |env.error.mail.open|异常是否邮件提醒|
-   |env.error.mail.level|异常邮件提醒级别|
-   |env.error.mail.receivers|异常邮件收件人|
-   |env.api.doc|接口文档地址|
-   |env.api.count|接口文档数量|
 
 2. 将`./nacos/LALA_BOOT_GROUP`文件夹进行压缩，导入至Nacos。
 
-   ![配置导入至至Nacos](./assets/image-20240627112932501.png)
+   ![image-20240728130319812](./assets/image-20240728130319812.png)
 
 ## 5. 本地开发
 
@@ -228,7 +227,7 @@ mysql -h127.0.0.1 -P3306 -uroot -p123456 < ./sql/v1.0.0.sql
 ### 5.2. 项目导入
 
 ```sh
-git clone https://gitee.com/jerry_up_lala/lala-boot.git
+git clone https://github.com/jerry-up-lala/lala-boot.git
 ```
 
 ![导入模块](./assets/image-20240626223711178.png)
@@ -239,40 +238,21 @@ git clone https://gitee.com/jerry_up_lala/lala-boot.git
 
  ```sh
  # 环境变量样例
- DATA_PATH=/Users/jerry/root/root/data/lala;NACOS_CONFIG_HOST=192.168.35.61:8848;NACOS_CONFIG_ENV=env.192.168.35.61.yaml
+ DATA_PATH=/Users/jerry/root/root/data/lala-boot;NACOS_CONFIG_HOST=192.168.35.61:8848;NACOS_CONFIG_GROUP=LALA_BOOT_GROUP;NACOS_CONFIG_ENV=env.192.168.35.61.yaml
  ```
 
-| 变量名            | 说明         | 样例值                           | 默认值         |
-| ----------------- | ------------ | -------------------------------- | -------------- |
-| DATA_PATH         | 数据存放路径 | /Users/jerry/root/root/data/lala | /data          |
-| NACOS_CONFIG_HOST | 配置中心地址 | 192.168.35.61:8848               | 127.0.0.1:8848 |
-| NACOS_CONFIG_ENV  | 配置环境     | env.192.168.35.61.yaml           | env.local.yaml |
+| 变量名             | 说明         | 样例值                           | 默认值          |
+| ------------------ | ------------ | -------------------------------- | --------------- |
+| DATA_PATH          | 数据存放路径 | /Users/jerry/root/root/data/lala-boot | /data           |
+| NACOS_CONFIG_HOST  | 配置中心地址 | 192.168.35.61:8848               | 127.0.0.1:8848  |
+| NACOS_CONFIG_GROUP | 配置中心分组 | LALA_BOOT_GROUP                  | LALA_BOOT_GROUP |
+| NACOS_CONFIG_ENV   | 配置环境     | env.192.168.35.61.yaml           | env.local.yaml  |
 
 ![设置环境变量](./assets/image-20240627142038944.png)
 
-- DATA_PATH
-
-  > 系统产生的数据存放路径，例如 系统日志，默认为 `/data`。
-
-  ![DATA_PATH](./assets/image-20240627142538875.png)
-
-  ![日志存放路径](./assets/image-20240627140328090.png)
-
-- NACOS_CONFIG_HOST
-
-  > 指定Nacos配置中心地址，默认为`127.0.0.1:8848`。
-
-  ![NACOS_CONFIG_HOST](./assets/image-20240627140526746.png)
-
-- NACOS_CONFIG_ENV
-
-  > 指定Nacos配置引用`data-id`，与`4.2.2.1. 初始化Nacos配置`中创建的配置文件名保持一致，默认为`127.0.0.1:8848`。
-
-  ![NACOS_CONFIG_ENV](./assets/image-20240627141105103.png)
-
 #### 5.3.2. idea启动应用
 
-![启动](./assets/image-20240627142639602.png)
+![image-20240728130755542](./assets/image-20240728130755542.png)
 
 #### 5.3.3. 验证接口
 
@@ -305,12 +285,13 @@ curl --location --request POST 'http://localhost:8080/open/sys/login' \
 
 1. 修改`jar.properties`配置文件。
 
-   | 变量名            | 说明                              | 默认值                                 |
-   | ----------------- | --------------------------------- | -------------------------------------- |
-   | DEPLOY_DIR        | 部署文件夹，jar包以及运行脚本路径 | /Users/jerry/Desktop/jerry_up_lala/jar |
-   | NACOS_CONFIG_HOST | 配置中心地址                      | 192.168.35.61:8848                     |
-   | NACOS_CONFIG_ENV  | 配置环境                          | env.192.168.35.61.yaml                 |
-   | POM_VERSION       | pom文件版本                       | 1.0.0                                  |
+   | 变量名             | 说明                              | 默认值                                 |
+   | ------------------ | --------------------------------- | -------------------------------------- |
+   | DEPLOY_DIR         | 部署文件夹，jar包以及运行脚本路径 | /Users/jerry/Desktop/jerry_up_lala/lala-boot/jar |
+   | NACOS_CONFIG_HOST  | 配置中心地址                      | 127.0.0.1:8848                     |
+   | NACOS_CONFIG_GROUP | 配置中心分组                      | LALA_BOOT_GROUP                        |
+   | NACOS_CONFIG_ENV   | 配置环境                          | env.local.yaml                 |
+   | POM_VERSION        | pom文件版本                       | 1.0.0                                  |
 
 2. 运行`jar.sh`，会编译`boot`并将编译后的文件以及部署脚本放至部署文件夹。
 
@@ -328,13 +309,14 @@ curl --location --request POST 'http://localhost:8080/open/sys/login' \
 
    > :heavy_exclamation_mark: docker镜像仓库默认配置需要登录权限，请替换为自己的私有镜像仓库。也可以使用阿里云提供的[免费docker镜像仓库](https://jerry-up-blog.pages.dev/tool/env/repository.html#_2-1-docker%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93)。
 
-   | 变量名            | 说明                     | 默认值                                     |
-   | ----------------- | ------------------------ | ------------------------------------------ |
-   | DEPLOY_DIR        | 部署文件夹，运行脚本路径 | /Users/jerry/Desktop/jerry_up_lala/docker  |
-   | NACOS_CONFIG_HOST | 配置中心地址             | 192.168.35.61:8848                         |
-   | NACOS_CONFIG_ENV  | 配置环境                 | env.192.168.35.61.yaml                     |
-   | POM_VERSION       | pom文件版本              | 1.0.0                                      |
-   | DOCKER_REGISTRY   | Docker镜像仓库地址       | registry.cn-hangzhou.aliyuncs.com/jerry-up |
+   | 变量名             | 说明                     | 默认值                                     |
+   | ------------------ | ------------------------ | ------------------------------------------ |
+   | DEPLOY_DIR         | 部署文件夹，运行脚本路径 | /Users/jerry/Desktop/jerry_up_lala/lala-boot/docker  |
+   | NACOS_CONFIG_HOST  | 配置中心地址             | 127.0.0.1:8848                         |
+   | NACOS_CONFIG_GROUP | 配置中心分组             | LALA_BOOT_GROUP                            |
+   | NACOS_CONFIG_ENV   | 配置环境                 | env.local.yaml                     |
+   | POM_VERSION        | pom文件版本              | 1.0.0                                      |
+   | DOCKER_REGISTRY    | Docker镜像仓库地址       | registry.cn-hangzhou.aliyuncs.com/jerry-up |
 
 2. 运行`docker.sh`，会编译`boot`并根据`Dockerfile`生成进行上传至镜像仓库，并将部署脚本放至部署文件夹。
    
@@ -353,14 +335,15 @@ curl --location --request POST 'http://localhost:8080/open/sys/login' \
 1. 修改`k8s.properties`配置文件。
    > :heavy_exclamation_mark: docker镜像仓库默认配置需要登录权限，请替换为自己的私有镜像仓库。也可以使用阿里云提供的[免费docker镜像仓库](https://jerry-up-blog.pages.dev/tool/env/repository.html#_2-1-docker%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93)。
 
-   | 变量名            | 说明                     | 默认值                                     |
-   | ----------------- | ------------------------ | ------------------------------------------ |
-   | DEPLOY_DIR        | 部署文件夹，运行脚本路径 | /Users/jerry/root/root/data/lala           |
-   | NACOS_CONFIG_HOST | 配置中心地址             | 192.168.35.61:8848                         |
-   | NACOS_CONFIG_ENV  | 配置环境                 | env.192.168.35.61.yaml                     |
-   | POM_VERSION       | pom文件版本              | 1.0.0                                      |
-   | DOCKER_REGISTRY   | Docker镜像仓库地址       | registry.cn-hangzhou.aliyuncs.com/jerry-up |
-
+   | 变量名             | 说明                     | 默认值                                     |
+   | ------------------ | ------------------------ | ------------------------------------------ |
+   | DEPLOY_DIR         | 部署文件夹，运行脚本路径 | /Users/jerry/Desktop/jerry_up_lala/lala-boot/k8s          |
+   | NACOS_CONFIG_HOST  | 配置中心地址             | 127.0.0.1:8848                         |
+   | NACOS_CONFIG_GROUP | 配置中心分组             | LALA_BOOT_GROUP                            |
+   | NACOS_CONFIG_ENV   | 配置环境                 | env.local.yaml                     |
+   | POM_VERSION        | pom文件版本              | 1.0.0                                      |
+   | DOCKER_REGISTRY    | Docker镜像仓库地址       | registry.cn-hangzhou.aliyuncs.com/jerry-up |
+   
 2. 根据不同的操作系统运行`k8s_mac.sh`或者`k8s_linux.sh`，会编译`boot`并根据`Dockerfile`生成进行上传至镜像仓库，并将编排文件，部署脚本放至部署文件夹。
 
    > :bulb: 由于sed命令在macOS以Linux操作系统存在差异，请根据不同操作系统运行不同的脚本。

@@ -6,7 +6,7 @@ package ${packageName}.access;
  * @author ${author}
  * @date ${date}
  */
-public class AccessConstant {
+public class ${className}AccessConstant {
 
     /**
      * ${functionName}

@@ -5,8 +5,8 @@ import com.jerry.up.lala.boot.entity.SysDict;
 import com.jerry.up.lala.boot.vo.SysDictInfoVO;
 import com.jerry.up.lala.boot.vo.SysDictSaveVO;
 import com.jerry.up.lala.boot.vo.SysDictVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
 
 import java.util.List;
 

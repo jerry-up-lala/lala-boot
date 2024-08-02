@@ -17,7 +17,7 @@ package ${packageName}.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 #end
 import ${packageName}.entity.${className};
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 #if($Import_BigDecimal)

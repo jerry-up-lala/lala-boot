@@ -1,14 +1,14 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import com.jerry.up.lala.boot.component.HttpComponent;
 import com.jerry.up.lala.boot.bo.HttpBO;
+import com.jerry.up.lala.boot.component.HttpComponent;
 import com.jerry.up.lala.boot.service.HttpService;
 import com.jerry.up.lala.boot.vo.HttpSendVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.redis.RedisLogComponent;
-import com.jerry.up.lala.framework.core.redis.RedisLogInfoBO;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.redis.RedisLogComponent;
+import com.jerry.up.lala.framework.boot.redis.RedisLogInfoBO;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

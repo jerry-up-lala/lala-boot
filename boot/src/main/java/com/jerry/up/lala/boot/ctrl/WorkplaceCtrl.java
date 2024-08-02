@@ -2,8 +2,8 @@ package com.jerry.up.lala.boot.ctrl;
 
 import com.jerry.up.lala.boot.service.WorkplaceService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.R;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.common.r.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

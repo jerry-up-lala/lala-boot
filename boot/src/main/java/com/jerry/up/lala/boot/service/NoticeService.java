@@ -1,10 +1,10 @@
 package com.jerry.up.lala.boot.service;
 
-import com.jerry.up.lala.boot.entity.Notice;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jerry.up.lala.boot.entity.Notice;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 

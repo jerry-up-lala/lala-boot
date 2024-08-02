@@ -2,7 +2,7 @@ package com.jerry.up.lala.boot.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jerry.up.lala.boot.entity.Crud;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -26,7 +26,7 @@ public class CrudInfoVO {
     private String id;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private String tenantId;
 

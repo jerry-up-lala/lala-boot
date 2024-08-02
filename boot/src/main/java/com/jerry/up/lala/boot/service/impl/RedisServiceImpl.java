@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormatter;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.ArrayUtil;
@@ -15,13 +15,13 @@ import com.jerry.up.lala.boot.vo.RedisKeyTreeVO;
 import com.jerry.up.lala.boot.vo.RedisListElementAddVO;
 import com.jerry.up.lala.boot.vo.RedisListElementDeleteVO;
 import com.jerry.up.lala.boot.vo.RedisListElementUpdateVO;
-import com.jerry.up.lala.framework.core.common.CommonConstant;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.redis.*;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.redis.*;
+import com.jerry.up.lala.framework.common.constant.CommonConstant;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
@@ -61,11 +61,11 @@ public class RedisServiceImpl implements RedisService {
     public List<RedisKeyTreeVO> keysTree(String pattern) {
         Set<String> keys = keys(pattern);
 
-        if (CollectionUtil.isEmpty(keys)) {
+        if (CollUtil.isEmpty(keys)) {
             return new ArrayList<>();
         }
-        List<Tree<String>> treeList = DataUtil.toTreeBySeparator(keys, CommonConstant.REDIS_KEY_SEPARATOR);
-        if (CollectionUtil.isEmpty(treeList)) {
+        List<Tree<String>> treeList = BeanUtil.toTreeBySeparator(keys, CommonConstant.REDIS_KEY_SEPARATOR);
+        if (CollUtil.isEmpty(treeList)) {
             return new ArrayList<>();
         }
         return treeList.stream().map(this::redisKeyTree).collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class RedisServiceImpl implements RedisService {
         if (!hasKey(key)) {
             throw ServiceException.error(BootErrors.REDIS_KEY_INVALID);
         }
-        RedisInfoBO result = DataUtil.toBean(redisKey(key), RedisInfoBO.class);
+        RedisInfoBO result = BeanUtil.toBean(redisKey(key), RedisInfoBO.class);
         String dataType = result.getDataType();
         Object value = null;
         if (DataType.STRING.name().equals(dataType)) {
@@ -140,12 +140,12 @@ public class RedisServiceImpl implements RedisService {
         } else if (DataType.SET.name().equals(dataType)) {
             redisSetTemplate.add(key, ArrayUtil.toArray((List) value, Object.class));
         } else if (DataType.ZSET.name().equals(dataType)) {
-            List<RedisZSetBO> boList = DataUtil.toBeanList((List) value, RedisZSetBO.class);
+            List<RedisZSetBO> boList = BeanUtil.toBeanList((List) value, RedisZSetBO.class);
             Set<ZSetOperations.TypedTuple<Object>> tuples = boList.stream().map(item ->
                     new DefaultTypedTuple<>(item.getValue(), item.getScore())).collect(Collectors.toSet());
             redisZSetTemplate.add(key, tuples);
         } else if (DataType.HASH.name().equals(dataType)) {
-            List<RedisHashBO> boList = DataUtil.toBeanList((List) value, RedisHashBO.class);
+            List<RedisHashBO> boList = BeanUtil.toBeanList((List) value, RedisHashBO.class);
             Map<String, Object> map = new HashMap<>();
             boList.forEach(item -> map.put(item.getField(), item.getValue()));
             redisHashTemplate.putAll(key, map);
@@ -313,7 +313,7 @@ public class RedisServiceImpl implements RedisService {
     }
 
     private Long count(Tree<String> tree, Long count) {
-        if (CollectionUtil.isNotEmpty(tree.getChildren())) {
+        if (CollUtil.isNotEmpty(tree.getChildren())) {
             count = count + tree.getChildren().stream().filter(item -> item.get("key") != null && (Boolean) (item.get("key"))).count();
             for (Tree<String> item : tree.getChildren()) {
                 count = count(item, count);

@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.vo;
 
-import com.jerry.up.lala.framework.core.common.PageQuery;
+import com.jerry.up.lala.framework.common.model.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

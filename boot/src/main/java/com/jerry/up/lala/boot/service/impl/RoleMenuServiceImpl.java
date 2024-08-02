@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.jerry.up.lala.boot.entity.RoleMenu;
 import com.jerry.up.lala.boot.mapper.RoleMenuMapper;
@@ -21,7 +21,7 @@ public class RoleMenuServiceImpl extends MPJBaseServiceImpl<RoleMenuMapper, Role
 
     @Override
     public void add(List<Long> menuIds, Long roleId, Date createTime, String createUser) {
-        if (CollectionUtil.isEmpty(menuIds)) {
+        if (CollUtil.isEmpty(menuIds)) {
             return;
         }
         List<RoleMenu> roleMenuList = menuIds.stream().map(item -> {

@@ -1,13 +1,13 @@
 package com.jerry.up.lala.boot.ctrl;
 
-import com.jerry.up.lala.boot.access.AccessDictConstant;
+import com.jerry.up.lala.boot.access.DictAccessConstant;
 import com.jerry.up.lala.boot.bo.SysDictItemRedisBO;
 import com.jerry.up.lala.boot.bo.SysDictItemVerifyBO;
 import com.jerry.up.lala.boot.enums.SysDictKey;
 import com.jerry.up.lala.boot.service.SysDictItemService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.R;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.common.r.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,56 +28,56 @@ public class SysDictItemCtrl {
     private SysDictItemService sysDictItemService;
 
     @GetMapping("/tree/{dictId}")
-    @Api(value = "字典管理-查看字典项", accessCodes = {AccessDictConstant.DICT_ITEM_TREE})
+    @Api(value = "字典管理-查看字典项", accessCodes = {DictAccessConstant.DICT_ITEM_TREE})
     public R tree(@PathVariable("dictId") Long dictId) {
         List<SysDictItemTreeVO> result = sysDictItemService.tree(dictId);
         return R.succeed(result);
     }
 
     @GetMapping("/cascader/{dictId}")
-    @Api(value = "字典管理-父字典项列表", accessCodes = {AccessDictConstant.DICT_ITEM_ADD, AccessDictConstant.DICT_ITEM_UPDATE})
+    @Api(value = "字典管理-父字典项列表", accessCodes = {DictAccessConstant.DICT_ITEM_ADD, DictAccessConstant.DICT_ITEM_UPDATE})
     public R cascader(@PathVariable("dictId") Long dictId) {
         List<SysDictItemCascaderVO> result = sysDictItemService.cascader(dictId);
         return R.succeed(result);
     }
 
     @GetMapping("/info/{id}")
-    @Api(value = "字典管理-字典项详情", accessCodes = {AccessDictConstant.DICT_ITEM_ADD, AccessDictConstant.DICT_ITEM_UPDATE})
+    @Api(value = "字典管理-字典项详情", accessCodes = {DictAccessConstant.DICT_ITEM_ADD, DictAccessConstant.DICT_ITEM_UPDATE})
     public R info(@PathVariable("id") Long id) {
         SysDictItemInfoVO infoVO = sysDictItemService.info(id);
         return R.succeed(infoVO);
     }
 
     @GetMapping("/verify-label/{dictId}")
-    @Api(value = "字典管理-字典项校验展示名", accessCodes = {AccessDictConstant.DICT_ITEM_ADD, AccessDictConstant.DICT_ITEM_UPDATE})
+    @Api(value = "字典管理-字典项校验展示名", accessCodes = {DictAccessConstant.DICT_ITEM_ADD, DictAccessConstant.DICT_ITEM_UPDATE})
     public R verifyLabel(@PathVariable("dictId") Long dictId, SysDictItemVerifyBO verifyBO) {
         sysDictItemService.verifyLabel(dictId, verifyBO);
         return R.empty();
     }
 
     @GetMapping("/verify-value/{dictId}")
-    @Api(value = "字典管理-字典项校验值", accessCodes = {AccessDictConstant.DICT_ITEM_ADD, AccessDictConstant.DICT_ITEM_UPDATE})
+    @Api(value = "字典管理-字典项校验值", accessCodes = {DictAccessConstant.DICT_ITEM_ADD, DictAccessConstant.DICT_ITEM_UPDATE})
     public R verifyValue(@PathVariable("dictId") Long dictId, SysDictItemVerifyBO verifyBO) {
         sysDictItemService.verifyValue(dictId, verifyBO);
         return R.empty();
     }
 
     @PostMapping("/{dictId}")
-    @Api(value = "字典管理-新增字典项", accessCodes = {AccessDictConstant.DICT_ITEM_ADD})
+    @Api(value = "字典管理-新增字典项", accessCodes = {DictAccessConstant.DICT_ITEM_ADD})
     public R add(@PathVariable("dictId") Long dictId, @RequestBody SysDictItemSaveVO sysDictItemSaveVO) {
         sysDictItemService.add(dictId, sysDictItemSaveVO);
         return R.empty();
     }
 
     @PutMapping("/{id}")
-    @Api(value = "字典管理-编辑字典项", accessCodes = {AccessDictConstant.DICT_ITEM_UPDATE})
+    @Api(value = "字典管理-编辑字典项", accessCodes = {DictAccessConstant.DICT_ITEM_UPDATE})
     public R update(@PathVariable("id") Long id, @RequestBody SysDictItemSaveVO sysDictItemSaveVO) {
         sysDictItemService.update(id, sysDictItemSaveVO);
         return R.empty();
     }
 
     @DeleteMapping("/{id}")
-    @Api(value = "字典管理-删除字典项", accessCodes = {AccessDictConstant.DICT_ITEM_DELETE})
+    @Api(value = "字典管理-删除字典项", accessCodes = {DictAccessConstant.DICT_ITEM_DELETE})
     public R delete(@PathVariable("id") Long id) {
         sysDictItemService.delete(id);
         return R.empty();

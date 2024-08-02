@@ -1,12 +1,10 @@
 package com.jerry.up.lala.boot.mapper;
+
 import com.github.yulichang.base.MPJBaseMapper;
-import org.apache.ibatis.annotations.Param;
-import java.util.Collection;
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jerry.up.lala.boot.entity.RoleMenu;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author jerry

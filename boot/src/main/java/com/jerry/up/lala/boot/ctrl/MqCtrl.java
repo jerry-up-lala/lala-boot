@@ -4,9 +4,9 @@ import com.jerry.up.lala.boot.access.AccessConstant;
 import com.jerry.up.lala.boot.bo.MqBO;
 import com.jerry.up.lala.boot.service.MqService;
 import com.jerry.up.lala.boot.vo.MqVO;
-import com.jerry.up.lala.framework.core.common.Api;
-import com.jerry.up.lala.framework.core.common.R;
-import com.jerry.up.lala.framework.core.redis.RedisLogInfoBO;
+import com.jerry.up.lala.framework.boot.api.Api;
+import com.jerry.up.lala.framework.boot.redis.RedisLogInfoBO;
+import com.jerry.up.lala.framework.common.r.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

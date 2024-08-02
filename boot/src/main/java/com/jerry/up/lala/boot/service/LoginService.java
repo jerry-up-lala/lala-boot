@@ -2,7 +2,6 @@ package com.jerry.up.lala.boot.service;
 
 import com.jerry.up.lala.boot.vo.LoginUserVO;
 import com.jerry.up.lala.boot.vo.LoginVO;
-import com.jerry.up.lala.framework.core.common.LoginUser;
 
 /**
  * <p>Description: 登录

@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.error;
 
-import com.jerry.up.lala.framework.core.common.Error;
+import com.jerry.up.lala.framework.common.exception.Error;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

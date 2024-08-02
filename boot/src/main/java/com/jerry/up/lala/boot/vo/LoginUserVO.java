@@ -31,7 +31,7 @@ public class LoginUserVO {
     private String realName;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private String tenantId;
 

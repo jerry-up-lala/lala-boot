@@ -8,13 +8,13 @@ import com.jerry.up.lala.boot.error.BootErrors;
 import com.jerry.up.lala.boot.service.*;
 import com.jerry.up.lala.boot.vo.LoginUserVO;
 import com.jerry.up.lala.boot.vo.LoginVO;
-import com.jerry.up.lala.framework.core.common.LoginUser;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.tenant.TenantContext;
-import com.jerry.up.lala.framework.core.crypto.RSAUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.crypto.RSAUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.boot.tenant.TenantContext;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.LoginUser;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,7 +84,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginUserVO info() {
-        LoginUserVO result = DataUtil.toBean(SaTokenUtil.currentUser(), LoginUserVO.class);
+        LoginUserVO result = BeanUtil.toBean(SaTokenUtil.currentUser(), LoginUserVO.class);
         List<String> accessCodes = roleService.getAccessCodes();
         return result.setAccessCodes(accessCodes);
     }

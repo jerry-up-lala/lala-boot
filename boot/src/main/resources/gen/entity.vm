@@ -31,8 +31,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 #end
 import ${packageName}.bo.${className}ExcelBO;
 import ${packageName}.vo.${className}InfoVO;
-import com.jerry.up.lala.framework.core.common.Entity;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.boot.entity.Entity;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;

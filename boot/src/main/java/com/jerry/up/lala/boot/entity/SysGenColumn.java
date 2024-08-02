@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jerry.up.lala.boot.enums.GenColumnType;
 import com.jerry.up.lala.boot.enums.SysDictKey;
-import com.jerry.up.lala.framework.core.common.Entity;
+import com.jerry.up.lala.framework.boot.entity.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

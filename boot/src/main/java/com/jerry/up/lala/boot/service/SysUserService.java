@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.service;
 
-import com.jerry.up.lala.boot.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jerry.up.lala.boot.entity.SysUser;
 
 /**
 * @author jerry

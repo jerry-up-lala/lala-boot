@@ -1,8 +1,8 @@
 package com.jerry.up.lala.boot.bo;
 
 import com.jerry.up.lala.boot.entity.Crud;
-import com.jerry.up.lala.framework.core.data.DataBean;
-import com.jerry.up.lala.framework.core.excel.ExcelFormat;
+import com.jerry.up.lala.framework.boot.excel.ExcelFormat;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 
 import java.math.BigDecimal;

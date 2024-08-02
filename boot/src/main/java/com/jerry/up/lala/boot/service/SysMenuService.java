@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.entity.SysMenu;
 import com.jerry.up.lala.boot.vo.SysMenuButtonVO;
 import com.jerry.up.lala.boot.vo.SysMenuRouteVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
+import com.jerry.up.lala.framework.common.model.DataBody;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jerry

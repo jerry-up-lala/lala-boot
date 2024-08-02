@@ -23,7 +23,7 @@ package ${packageName}.dto;
 
 import com.jerry.up.lala.boot.vo.${className}QueryVO;
 #if($Import_Date)
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 #end
 import lombok.Data;
 import lombok.experimental.Accessors;

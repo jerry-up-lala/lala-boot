@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -46,12 +46,12 @@ public class SysLogRequestVO {
     private String clientIp;
 
     /**
-     * 租户Id
+     * 集团Id
      */
     private String tenantId;
 
     /**
-     * 租户名称
+     * 集团名称
      */
     private String tenantName;
 

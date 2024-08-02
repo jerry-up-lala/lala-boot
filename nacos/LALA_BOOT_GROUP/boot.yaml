@@ -1,6 +1,17 @@
 server:
   port: 8080
 
+mysql:
+  database: lala_boot
+
 gen:
-  project-name: "boot"
-  package-name: "com.jerry.up.lala.boot"
+  project-name: boot
+  package-name: com.jerry.up.lala.boot
+
+api:
+  doc: https://jerry-up-lala-boot.apifox.cn
+  count: 172
+
+upload:
+  max: ${env.upload.max}
+  partition: ${env.upload.partition}

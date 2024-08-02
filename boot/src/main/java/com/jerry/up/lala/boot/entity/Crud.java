@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.jerry.up.lala.boot.bo.CrudExcelBO;
 import com.jerry.up.lala.boot.vo.CrudInfoVO;
 import com.jerry.up.lala.boot.vo.CrudSaveVO;
-import com.jerry.up.lala.framework.core.common.Entity;
-import com.jerry.up.lala.framework.core.data.DataBean;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.boot.entity.Entity;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
@@ -34,7 +34,7 @@ public class Crud extends Entity {
     private String id;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private String tenantId;
 

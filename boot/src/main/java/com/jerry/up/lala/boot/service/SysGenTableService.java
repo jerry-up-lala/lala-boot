@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.dto.GenTableDTO;
 import com.jerry.up.lala.boot.dto.GenTableQueryDTO;
 import com.jerry.up.lala.boot.entity.SysGenTable;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 /**
 * @author jerry

@@ -14,7 +14,7 @@
 package ${packageName}.vo;
 
 import ${packageName}.dto.${className}QueryDTO;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.util.List;

@@ -4,10 +4,9 @@ import com.jerry.up.lala.boot.entity.SysDictItem;
 import com.jerry.up.lala.boot.vo.SysDictItemInfoVO;
 import com.jerry.up.lala.boot.vo.SysDictItemTreeVO;
 import com.jerry.up.lala.boot.vo.SysDictItemVO;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
 
 /**
  * <p>Description: 字典项

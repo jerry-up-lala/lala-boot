@@ -1,8 +1,8 @@
 package com.jerry.up.lala.boot.vo;
 
 import com.jerry.up.lala.boot.dto.NoticeQueryDTO;
-import com.jerry.up.lala.framework.core.common.PageQuery;
-import com.jerry.up.lala.framework.core.data.DataBean;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
+import com.jerry.up.lala.framework.common.model.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;

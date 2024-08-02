@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.jerry.up.lala.boot.entity.RoleUser;
 import com.jerry.up.lala.boot.mapper.RoleUserMapper;
@@ -23,7 +23,7 @@ public class RoleUserServiceImpl extends MPJBaseServiceImpl<RoleUserMapper, Role
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void add(String userId, List<Long> roleIds, Date createTime, String createUser) {
-        if (CollectionUtil.isEmpty(roleIds)) {
+        if (CollUtil.isEmpty(roleIds)) {
             return;
         }
         List<RoleUser> roleUserList = roleIds.stream().map(item -> {

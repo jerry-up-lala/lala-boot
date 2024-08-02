@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -20,16 +20,16 @@ import com.jerry.up.lala.boot.service.RoleUserService;
 import com.jerry.up.lala.boot.service.SysMenuService;
 import com.jerry.up.lala.boot.service.UserService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.crypto.RSAUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.crypto.RSAUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +67,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<UserVO> list(UserQueryVO userQueryVO) {
         try {
-            UserQueryDTO queryDTO = DataUtil.toBean(userQueryVO, UserQueryDTO.class);
+            UserQueryDTO queryDTO = BeanUtil.toBean(userQueryVO, UserQueryDTO.class);
             List<UserDTO> userList = listDTO(queryDTO, new UserLoadBO().setRole(true).setMenu(true));
-            return DataUtil.toBeanList(userList, UserVO.class);
+            return BeanUtil.toBeanList(userList, UserVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -77,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public PageR<UserVO> pageQuery(UserQueryVO userQueryVO) {
-        UserQueryDTO queryDTO = DataUtil.toBean(userQueryVO, UserQueryDTO.class);
+        UserQueryDTO queryDTO = BeanUtil.toBean(userQueryVO, UserQueryDTO.class);
         try {
             LambdaQueryWrapper<User> queryWrapper = loadQuery(queryDTO);
             IPage<User> userPage = page(PageUtil.initPage(userQueryVO), queryWrapper);
@@ -93,13 +93,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public UserInfoVO info(String id) {
         UserDTO userDTO = get(id, new UserLoadBO().setRole(true).setMenu(true));
         List<SysMenuButtonVO> menuButtonList = sysMenuService.convertVO(userDTO.getMenuList());
-        return DataUtil.toBean(userDTO, UserInfoVO.class).setMenuButtonList(menuButtonList);
+        return BeanUtil.toBean(userDTO, UserInfoVO.class).setMenuButtonList(menuButtonList);
     }
 
     @Override
     public UserPersonalVO personalInfo() {
         UserDTO userDTO = get(SaTokenUtil.currentUser().getUserId(), null);
-        return DataUtil.toBean(userDTO, UserPersonalVO.class);
+        return BeanUtil.toBean(userDTO, UserPersonalVO.class);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             Date now = new Date();
             String currentUserId = SaTokenUtil.currentUser().getUserId();
 
-            User user = DataUtil.toBean(userSaveVO, User.class);
+            User user = BeanUtil.toBean(userSaveVO, User.class);
             if (user.getState() == null) {
                 user.setState(true);
             }
@@ -182,7 +182,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             String currentUserId = SaTokenUtil.currentUser().getUserId();
 
             Boolean state = oldUser.getState();
-            DataUtil.copy(userSaveVO, oldUser, User.Fields.tenantAdmin);
+            BeanUtil.copy(userSaveVO, oldUser, User.Fields.tenantAdmin);
             if (oldUser.getState() == null) {
                 oldUser.setState(state);
             }
@@ -193,18 +193,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
             List<Long> roleIds = userSaveVO.getRoleIds();
             List<Long> oldRoleIds = oldUser.getRoleIds();
-            if (CollectionUtil.isNotEmpty(roleIds)) {
+            if (CollUtil.isNotEmpty(roleIds)) {
                 // 新增的角色ID列表
-                List<Long> addRoleIds = roleIds.stream().filter(item -> !CollectionUtil.contains(oldRoleIds, item))
+                List<Long> addRoleIds = roleIds.stream().filter(item -> !CollUtil.contains(oldRoleIds, item))
                         .collect(Collectors.toList());
                 roleUserService.add(id, addRoleIds, now, currentUserId);
             }
 
-            if (CollectionUtil.isNotEmpty(oldRoleIds)) {
+            if (CollUtil.isNotEmpty(oldRoleIds)) {
                 // 删除的角色ID列表
-                List<Long> deleteRoleIds = oldRoleIds.stream().filter(item -> !CollectionUtil.contains(roleIds, item))
+                List<Long> deleteRoleIds = oldRoleIds.stream().filter(item -> !CollUtil.contains(roleIds, item))
                         .collect(Collectors.toList());
-                if (CollectionUtil.isNotEmpty(deleteRoleIds)) {
+                if (CollUtil.isNotEmpty(deleteRoleIds)) {
                     roleUserService.remove(new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, id).in(RoleUser::getRoleId, deleteRoleIds));
                 }
             }
@@ -248,7 +248,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<String> userIdList = userStateVO.getUserIdList();
         // 状态
         Boolean state = userStateVO.getState();
-        if (CollectionUtil.isEmpty(userIdList) || state == null) {
+        if (CollUtil.isEmpty(userIdList) || state == null) {
             throw ServiceException.args();
         }
         LambdaUpdateWrapper<User> update = new LambdaUpdateWrapper<User>()
@@ -283,7 +283,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
 
             List<String> ids = queryDTO.getIds();
-            if (CollectionUtil.isNotEmpty(ids)) {
+            if (CollUtil.isNotEmpty(ids)) {
                 queryWrapper.in(User::getId, ids);
             }
 
@@ -347,7 +347,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
     private void loadBOData(List<String> userIds, UserLoadBO loadBO) {
-        if (loadBO == null || CollectionUtil.isEmpty(userIds)) {
+        if (loadBO == null || CollUtil.isEmpty(userIds)) {
             return;
         }
         // 加载角色信息
@@ -391,7 +391,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                 roleList.stream().filter(item -> BooleanUtil.isTrue(item.getState())).forEach(item -> {
                                     Long userRoleId = item.getRoleId();
                                     List<RoleMenu> menuList = roleMenuMap.get(userRoleId);
-                                    if (CollectionUtil.isNotEmpty(menuList)) {
+                                    if (CollUtil.isNotEmpty(menuList)) {
                                         userMenuIds.addAll(menuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList()));
                                     }
                                 });
@@ -413,7 +413,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     private UserDTO loadExpand(User user, UserLoadBO loadBO) {
-        UserDTO result = DataUtil.toBean(user, UserDTO.class);
+        UserDTO result = BeanUtil.toBean(user, UserDTO.class);
         if (loadBO != null) {
             // 角色map
             Map<String, List<RoleUserDTO>> roleMap = loadBO.getRoleMap();
@@ -421,7 +421,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 if (roleMap != null) {
                     List<RoleUserDTO> roleList = roleMap.get(user.getId());
                     result.setRoleList(roleList);
-                    if (CollectionUtil.isNotEmpty(roleList)) {
+                    if (CollUtil.isNotEmpty(roleList)) {
                         result.setEffectiveRoleNames(roleList.stream().filter(item -> BooleanUtil.isTrue(item.getState()))
                                 .map(RoleUserDTO::getRoleName).distinct().collect(Collectors.toList()));
                         result.setInvalidRoleNames(roleList.stream().filter(item -> BooleanUtil.isFalse(item.getState()))

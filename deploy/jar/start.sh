@@ -39,6 +39,7 @@ nohup java -jar \
     $JAR_PATH \
     --DATA_PATH=$DATA_PATH \
     --NACOS_CONFIG_HOST=$NACOS_CONFIG_HOST \
+    --NACOS_CONFIG_GROUP=$NACOS_CONFIG_GROUP \
     --NACOS_CONFIG_ENV=$NACOS_CONFIG_ENV \
     > $LOGS_DIR/boot.log 2>&1 &
 

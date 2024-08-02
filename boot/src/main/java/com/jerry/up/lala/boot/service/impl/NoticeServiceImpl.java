@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,14 +17,14 @@ import com.jerry.up.lala.boot.service.NoticeService;
 import com.jerry.up.lala.boot.service.NoticeUserService;
 import com.jerry.up.lala.boot.service.UserService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     public PageR<NoticeVO> pageQuery(NoticeQueryVO noticeQueryVO) {
         Page<Notice> page = PageUtil.initPage(noticeQueryVO);
         try {
-            NoticeQueryDTO queryDTO = DataUtil.toBean(noticeQueryVO, NoticeQueryDTO.class);
+            NoticeQueryDTO queryDTO = BeanUtil.toBean(noticeQueryVO, NoticeQueryDTO.class);
             LambdaQueryWrapper<Notice> queryWrapper = new LambdaQueryWrapper<>();
             // 标题
             String title = queryDTO.getTitle();
@@ -92,7 +92,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     public NoticeInfoVO info(Long id) {
         Notice notice = selectById(id);
         try {
-            NoticeInfoVO result = DataUtil.toBean(notice, NoticeInfoVO.class);
+            NoticeInfoVO result = BeanUtil.toBean(notice, NoticeInfoVO.class);
             List<NoticeUser> noticeUserList = noticeUserService.list(new LambdaQueryWrapper<NoticeUser>().eq(NoticeUser::getNoticeId, id));
             result.setUserIds(noticeUserList.stream().map(NoticeUser::getUserId).collect(Collectors.toList()));
             return result;
@@ -112,7 +112,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         List<UserDTO> userList = checkSaveArgs(noticeSaveVO);
         try {
             // 入库消息表
-            Notice notice = DataUtil.toBean(noticeSaveVO, Notice.class);
+            Notice notice = BeanUtil.toBean(noticeSaveVO, Notice.class);
             notice.setSendState(NoticeSendState.UNSENT.getValue());
             save(notice);
             // 入库消息用户表
@@ -128,7 +128,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         Notice notice = checkNotice(id);
         List<UserDTO> userList = checkSaveArgs(noticeSaveVO);
         try {
-            DataUtil.copy(noticeSaveVO, notice);
+            BeanUtil.copy(noticeSaveVO, notice);
             updateById(notice);
             // 入库消息用户表
             noticeUserService.save(notice.getId(), userList);
@@ -170,7 +170,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     public void batchDelete(DataBody<List<Long>> dataBody) {
         List<Long> ids = CheckUtil.dataNull(dataBody);
         List<Notice> noticeList = listByIds(ids);
-        if (CollectionUtil.isEmpty(noticeList)) {
+        if (CollUtil.isEmpty(noticeList)) {
             throw ServiceException.notFound();
         }
         boolean send = noticeList.stream().anyMatch(item -> !NoticeSendState.UNSENT.getValue().equals(item.getSendState()));
@@ -192,12 +192,12 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         String html = noticeSaveVO.getHtml();
         // 接收账号ID列表
         List<String> userIds = noticeSaveVO.getUserIds();
-        if (StringUtil.isNull(title) || NoticeType.fromValue(noticeType) == null || StringUtil.isNull(html) || CollectionUtil.isEmpty(userIds)) {
+        if (StringUtil.isNull(title) || NoticeType.fromValue(noticeType) == null || StringUtil.isNull(html) || CollUtil.isEmpty(userIds)) {
             throw ServiceException.args();
         }
         // 查询目标用户
         List<UserDTO> userList = userService.listDTO(new UserQueryDTO().setState(true).setIds(userIds), null);
-        if (CollectionUtil.isEmpty(userList)) {
+        if (CollUtil.isEmpty(userList)) {
             throw ServiceException.error(BootErrors.NOTICE_USER_EMPTY);
         }
         return userList;

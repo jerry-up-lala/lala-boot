@@ -2,8 +2,8 @@ package com.jerry.up.lala.boot.listener;
 
 import com.jerry.up.lala.boot.constant.MqConstant;
 import com.jerry.up.lala.boot.service.SysLogRequestService;
-import com.jerry.up.lala.framework.core.common.CommonConstant;
-import com.jerry.up.lala.framework.core.api.ApiLog;
+import com.jerry.up.lala.framework.boot.api.ApiLog;
+import com.jerry.up.lala.framework.common.constant.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(consumerGroup = MqConstant.LALA_BOOT_CONSUMER, topic = CommonConstant.REQUEST_LOG_TOPIC)
+@RocketMQMessageListener(consumerGroup = MqConstant.LOG_REQUEST_TOPIC_CONSUMER_GROUP, topic = MqConstant.LOG_REQUEST_TOPIC)
 public class LogRequestTopicListener implements RocketMQListener<ApiLog> {
 
     @Autowired

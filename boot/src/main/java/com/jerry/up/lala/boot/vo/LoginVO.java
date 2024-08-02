@@ -2,8 +2,6 @@ package com.jerry.up.lala.boot.vo;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * <p>Description: 登录表单
  *

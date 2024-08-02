@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.constant;
 
-import com.jerry.up.lala.framework.core.common.CommonConstant;
+import com.jerry.up.lala.framework.common.constant.CommonConstant;
 
 /**
  * <p>Description: 缓存管理常量
@@ -11,9 +11,8 @@ import com.jerry.up.lala.framework.core.common.CommonConstant;
 public class RedisConstant {
 
     /**
-     * redis log
+     * Sys:Dict
      */
-    public static final String REDIS_KEY_SYS_DICT = "Redis" + CommonConstant.REDIS_KEY_SEPARATOR + "Sys" + CommonConstant.REDIS_KEY_SEPARATOR + "Dict";
-
+    public static final String REDIS_KEY_SYS_DICT = "Sys" + CommonConstant.REDIS_KEY_SEPARATOR + "Dict";
 
 }

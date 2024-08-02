@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -16,14 +16,14 @@ import com.jerry.up.lala.boot.mapper.SysLogRequestMapper;
 import com.jerry.up.lala.boot.service.SysLogRequestService;
 import com.jerry.up.lala.boot.vo.SysLogRequestQueryVO;
 import com.jerry.up.lala.boot.vo.SysLogRequestVO;
-import com.jerry.up.lala.framework.core.api.ApiLog;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageQuery;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.api.ApiLog;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.PageQuery;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -42,7 +42,7 @@ public class SysLogRequestServiceImpl extends MPJBaseServiceImpl<SysLogRequestMa
     @Override
     public void save(ApiLog apiLog) {
         if (apiLog != null) {
-            SysLogRequest sysLogRequest = DataUtil.toBean(apiLog, SysLogRequest.class);
+            SysLogRequest sysLogRequest = BeanUtil.toBean(apiLog, SysLogRequest.class);
             sysLogRequest.setCreateTime(new Date());
             save(sysLogRequest);
         }
@@ -50,7 +50,7 @@ public class SysLogRequestServiceImpl extends MPJBaseServiceImpl<SysLogRequestMa
 
     @Override
     public PageR<SysLogRequestVO> pageQuery(SysLogRequestQueryVO sysLogRequestQueryVO) {
-        SysLogRequestQueryDTO queryDTO = DataUtil.toBean(sysLogRequestQueryVO, SysLogRequestQueryDTO.class);
+        SysLogRequestQueryDTO queryDTO = BeanUtil.toBean(sysLogRequestQueryVO, SysLogRequestQueryDTO.class);
         IPage<SysLogRequestDTO> pageResult = pageByDTO(sysLogRequestQueryVO, queryDTO);
         try {
             return PageUtil.toPageR(pageResult, SysLogRequestVO.class);
@@ -128,7 +128,7 @@ public class SysLogRequestServiceImpl extends MPJBaseServiceImpl<SysLogRequestMa
         }
 
         List<String> tenantIds = queryDTO.getTenantIds();
-        if (CollectionUtil.isNotEmpty(tenantIds)) {
+        if (CollUtil.isNotEmpty(tenantIds)) {
             query.in(SysLogRequest::getTenantId, tenantIds);
         }
 
@@ -143,7 +143,7 @@ public class SysLogRequestServiceImpl extends MPJBaseServiceImpl<SysLogRequestMa
         }
 
         List<String> servletMethods = queryDTO.getServletMethods();
-        if (CollectionUtil.isNotEmpty(servletMethods)) {
+        if (CollUtil.isNotEmpty(servletMethods)) {
             query.in(SysLogRequest::getServletMethod, servletMethods);
         }
 

@@ -1,18 +1,18 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jerry.up.lala.boot.dto.*;
+import com.jerry.up.lala.boot.properties.ApiProperties;
 import com.jerry.up.lala.boot.service.NoticeUserService;
 import com.jerry.up.lala.boot.service.SysLogRequestService;
 import com.jerry.up.lala.boot.service.SysMenuService;
 import com.jerry.up.lala.boot.service.WorkplaceService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.api.ApiProperties;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +62,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
             List<SysLogRequestSumDTO> sumList = sysLogRequestService.sum();
             List<AntVDualAxesDataVO> column = new ArrayList<>();
             List<AntVDualAxesDataVO> data = new ArrayList<>();
-            if (CollectionUtil.isNotEmpty(sumList)) {
+            if (CollUtil.isNotEmpty(sumList)) {
                 for (SysLogRequestSumDTO sumDTO : sumList) {
                     String date = sumDTO.getDate();
                     column.add(new AntVDualAxesDataVO().setX(date).setY(sumDTO.getCount()));
@@ -92,7 +92,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     public List<SysLogRequestApiNameVO> logApiName() {
         try {
             List<SysLogRequestApiNameDTO> sysLogRequestApiNameDTO = sysLogRequestService.apiName();
-            return DataUtil.toBeanList(sysLogRequestApiNameDTO, SysLogRequestApiNameVO.class);
+            return BeanUtil.toBeanList(sysLogRequestApiNameDTO, SysLogRequestApiNameVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }

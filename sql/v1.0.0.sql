@@ -236,7 +236,7 @@ INSERT INTO `lala_boot`.`sys_menu` (`id`, `parent_id`, `type`, `locale`, `locale
 (93, 90, 1, 'menu.center.notice.info', '通知详情', b'0', '', 'NoticeUserInfo', 'notice-user-info', NULL, b'1', b'0', b'0', 93, now(), '1698900184022351875', NULL, NULL, b'0'),
 (94, 0, 1, 'menu.external', '外部链接', b'1', 'EXTERNAL', 'External', '/external', 'icon-link', NULL, NULL, NULL, 94, now(), '1698900184022351875', NULL, NULL, b'0'),
 (95, 94, 1, 'menu.arcoWebsite', 'Arco Design', b'1', 'ARCOWEBSITE', 'ArcoWebsite', 'https://arco.design', '', NULL, NULL, NULL, 95, now(), '1698900184022351875', NULL, NULL, b'0'),
-(96, 94, 1, 'menu.jerryUp', 'Jerry Up', b'1', 'JERRYUP', 'JerryUp', 'https://jerry-up.gitee.io/blog', '', NULL, NULL, NULL, 96, now(), '1698900184022351875', NULL, NULL, b'0');
+(96, 94, 1, 'menu.jerryUpBlog', 'Jerry Up Blog', b'1', 'JERRYUPBLOG', 'JerryUpBlog', 'https://jerry-up-blog.pages.dev/', '', NULL, NULL, NULL, 96, now(), '1698900184022351875', NULL, NULL, b'0');
 
 update `lala_boot`.`sys_menu` set menu_order = id;
 

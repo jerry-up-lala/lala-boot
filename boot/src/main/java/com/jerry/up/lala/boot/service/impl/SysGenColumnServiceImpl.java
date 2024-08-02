@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,8 +13,8 @@ import com.jerry.up.lala.boot.enums.GenColumnType;
 import com.jerry.up.lala.boot.mapper.SysGenColumnMapper;
 import com.jerry.up.lala.boot.service.SysDictItemService;
 import com.jerry.up.lala.boot.service.SysGenColumnService;
-import com.jerry.up.lala.framework.core.common.Entity;
-import com.jerry.up.lala.framework.core.data.DataUtil;
+import com.jerry.up.lala.framework.boot.entity.Entity;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +44,7 @@ public class SysGenColumnServiceImpl extends ServiceImpl<SysGenColumnMapper, Sys
 
     private Map<String, SysGenColumn> sysGenColumnMap(Long tableId) {
         List<SysGenColumn> sysGenColumnList = list(new LambdaQueryWrapper<SysGenColumn>().eq(SysGenColumn::getTableId, tableId));
-        return CollectionUtil.isNotEmpty(sysGenColumnList) ? sysGenColumnList.stream()
+        return CollUtil.isNotEmpty(sysGenColumnList) ? sysGenColumnList.stream()
                 .collect(Collectors.toMap(SysGenColumn::getColumnName, Function.identity(), (key1, key2) -> key1)) : new HashMap<>(16);
     }
 
@@ -61,13 +61,13 @@ public class SysGenColumnServiceImpl extends ServiceImpl<SysGenColumnMapper, Sys
     private GenColumnDTO loadGenColumnDTO(InformationSchemaColumnDTO informationSchemaColumnDTO, Map<String, SysGenColumn> columnMap) {
         Set<String> dictKeySet = sysDictItemService.all().keySet();
 
-        GenColumnDTO genColumnDTO = DataUtil.toBean(informationSchemaColumnDTO, GenColumnDTO.class);
+        GenColumnDTO genColumnDTO = BeanUtil.toBean(informationSchemaColumnDTO, GenColumnDTO.class);
         GenColumnType genColumnType = GenColumnType.type(genColumnDTO.getColumnDataType());
         genColumnDTO.setColumnJdbcType(genColumnType.getJdbcType());
         String columnName = informationSchemaColumnDTO.getColumnName();
         SysGenColumn sysGenColumn = columnMap.get(columnName);
         if (sysGenColumn != null) {
-            DataUtil.copy(sysGenColumn, genColumnDTO);
+            BeanUtil.copy(sysGenColumn, genColumnDTO);
         } else {
             genColumnDTO.setFieldName(StrUtil.toCamelCase(genColumnDTO.getColumnName()));
             genColumnDTO.setFieldType(genColumnType.getFieldType());

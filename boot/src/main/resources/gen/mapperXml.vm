@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${packageName}.mapper.${className}Mapper">
+
+    <resultMap id="BaseResultMap" type="${packageName}.entity.${className}">
+    #foreach ($column in $columnList)
+        #if($column.columnKey == 'PRI')
+        <id property="${column.fieldName}" column="${column.columnName}" jdbcType="${column.columnJdbcType}"/>
+        #else
+        <result property="${column.fieldName}" column="${column.columnName}" jdbcType="${column.columnJdbcType}"/>
+        #end
+    #end
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    #foreach ($column in $columnList)
+        ${column.columnName}#if($foreach.index != ($columnList.size() - 1)),#end
+    #end
+    </sql>
+
+    <insert id="insertBatch">
+        insert into ${tableName}(
+        #foreach ($column in $columnList)
+            ${column.columnName}#if($foreach.index != ($columnList.size() - 1)),#end
+        #end
+        )
+        values
+        <foreach collection="collection" item="item" separator=",">
+            (
+            #foreach ($column in $columnList)
+                #{item.${column.fieldName},jdbcType=${column.columnJdbcType}}#if($foreach.index != ($columnList.size() - 1)),#end
+            #end
+            )
+        </foreach>
+    </insert>
+</mapper>

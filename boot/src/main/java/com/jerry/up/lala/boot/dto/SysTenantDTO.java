@@ -1,16 +1,19 @@
 package com.jerry.up.lala.boot.dto;
 
 import com.jerry.up.lala.boot.entity.SysTenant;
+import com.jerry.up.lala.boot.vo.SysTenantInfoVO;
+import com.jerry.up.lala.framework.common.annotation.DataBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 租户表
+ * 集团表
  *
  * @author FMJ
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@DataBean(targetTypes = SysTenantInfoVO.class)
 public class SysTenantDTO extends SysTenant {
 
     /**

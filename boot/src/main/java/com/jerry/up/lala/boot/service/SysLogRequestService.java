@@ -8,8 +8,8 @@ import com.jerry.up.lala.boot.dto.SysLogRequestSumDTO;
 import com.jerry.up.lala.boot.entity.SysLogRequest;
 import com.jerry.up.lala.boot.vo.SysLogRequestQueryVO;
 import com.jerry.up.lala.boot.vo.SysLogRequestVO;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.api.ApiLog;
+import com.jerry.up.lala.framework.boot.api.ApiLog;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 

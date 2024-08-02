@@ -1,7 +1,7 @@
 package com.jerry.up.lala.boot.dto;
 
 import com.jerry.up.lala.boot.vo.SysLogRequestQueryVO;
-import com.jerry.up.lala.framework.core.data.DataFormat;
+import com.jerry.up.lala.framework.common.annotation.DataFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -42,7 +42,7 @@ public class SysLogRequestQueryDTO {
     private String clientIp;
 
     /**
-     * 租户ID
+     * 集团ID
      */
     private List<String> tenantIds;
 

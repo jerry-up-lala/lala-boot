@@ -3,19 +3,19 @@ package com.jerry.up.lala.boot.service;
 
 import com.github.yulichang.base.MPJBaseService;
 import com.jerry.up.lala.boot.entity.SysTenant;
-import com.jerry.up.lala.boot.vo.SysSysTenantAddVO;
+import com.jerry.up.lala.boot.vo.SysTenantAddVO;
 import com.jerry.up.lala.boot.vo.SysTenantInfoVO;
 import com.jerry.up.lala.boot.vo.SysTenantQueryVO;
 import com.jerry.up.lala.boot.vo.SysTenantUpdateVO;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 
 /**
  * @author jerry
- * @description 针对表【sys_tenant(租户表)】的数据库操作Service
+ * @description 针对表【sys_tenant(集团表)】的数据库操作Service
  * @createDate 2023-09-18 16:19:50
  */
 public interface SysTenantService extends MPJBaseService<SysTenant> {
@@ -74,7 +74,7 @@ public interface SysTenantService extends MPJBaseService<SysTenant> {
      * @date 2023/8/16 16:02
      * @since v1.0.0
      */
-    void add(SysSysTenantAddVO sysTenantAddVO);
+    void add(SysTenantAddVO sysTenantAddVO);
 
     /**
      * <p>Description: 更新

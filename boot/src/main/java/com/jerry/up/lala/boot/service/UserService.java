@@ -1,13 +1,13 @@
 package com.jerry.up.lala.boot.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.bo.UserLoadBO;
 import com.jerry.up.lala.boot.dto.UserDTO;
 import com.jerry.up.lala.boot.dto.UserQueryDTO;
 import com.jerry.up.lala.boot.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataIdBody;
-import com.jerry.up.lala.framework.core.common.PageR;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.r.PageR;
 
 import java.util.List;
 

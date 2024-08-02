@@ -1,8 +1,8 @@
 package com.jerry.up.lala.boot.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.dto.GenColumnDTO;
 import com.jerry.up.lala.boot.entity.SysGenColumn;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.jerry.up.lala.boot.entity.SysGenTable;
 
 import java.util.List;

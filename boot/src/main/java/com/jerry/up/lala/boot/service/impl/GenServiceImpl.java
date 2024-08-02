@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
@@ -28,15 +28,15 @@ import com.jerry.up.lala.boot.service.GenService;
 import com.jerry.up.lala.boot.service.SysGenColumnService;
 import com.jerry.up.lala.boot.service.SysGenTableService;
 import com.jerry.up.lala.boot.vo.*;
-import com.jerry.up.lala.framework.core.common.DataBody;
-import com.jerry.up.lala.framework.core.common.Errors;
-import com.jerry.up.lala.framework.core.common.PageR;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.response.ResponseUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.response.ResponseUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataBody;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class GenServiceImpl implements GenService {
     public PageR<GenTableVO> tablePage(GenTableQueryVO genTableQueryVO) {
         Page<GenTableDTO> page = PageUtil.initPage(genTableQueryVO);
         try {
-            PageR<GenTableDTO> pageResult = sysGenTableService.tablePage(page, DataUtil.toBean(genTableQueryVO, GenTableQueryDTO.class));
+            PageR<GenTableDTO> pageResult = sysGenTableService.tablePage(page, BeanUtil.toBean(genTableQueryVO, GenTableQueryDTO.class));
             return PageUtil.toPageR(pageResult, GenTableVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
@@ -89,7 +89,7 @@ public class GenServiceImpl implements GenService {
         }
         GenTableDTO genTableDTO = sysGenTableService.selectByTableName(tableName);
         try {
-            return DataUtil.toBean(genTableDTO, GenTableVO.class);
+            return BeanUtil.toBean(genTableDTO, GenTableVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -119,7 +119,7 @@ public class GenServiceImpl implements GenService {
         SysGenTable sysGenTable = sysGenTable(tableId);
         try {
             List<GenColumnDTO> columnList = sysGenColumnService.list(sysGenTable);
-            return DataUtil.toBeanList(columnList, GenColumnVO.class);
+            return BeanUtil.toBeanList(columnList, GenColumnVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -142,7 +142,7 @@ public class GenServiceImpl implements GenService {
         }
         SysGenTable sysGenTable = sysGenTable(tableId);
         List<GenColumnDTO> columnList = sysGenColumnService.list(sysGenTable);
-        if (CollectionUtil.isEmpty(columnList)) {
+        if (CollUtil.isEmpty(columnList)) {
             throw ServiceException.args();
         }
         // 新增list
@@ -173,11 +173,11 @@ public class GenServiceImpl implements GenService {
             }
         }
 
-        if (CollectionUtil.isNotEmpty(addList)) {
+        if (CollUtil.isNotEmpty(addList)) {
             sysGenColumnService.insertBatch(addList);
 
         }
-        if (CollectionUtil.isNotEmpty(updateList)) {
+        if (CollUtil.isNotEmpty(updateList)) {
             sysGenColumnService.updateBatch(updateList);
         }
 
@@ -188,7 +188,7 @@ public class GenServiceImpl implements GenService {
         List<GenPreviewBO> previewList = previewList(tableId);
         try {
             Set<String> pathList = previewList.stream().map(preview -> preview.getPath() + File.separator + preview.getName()).collect(Collectors.toSet());
-            List<Tree<String>> treeList = DataUtil.toTreeBySeparator(pathList, File.separator);
+            List<Tree<String>> treeList = BeanUtil.toTreeBySeparator(pathList, File.separator);
             List<GenPreviewTreeVO> tree = treeList.stream().map(this::genPreviewTreeVO).collect(Collectors.toList());
             List<GenPreviewTabVO> tab = previewList.stream().map(preview -> new GenPreviewTabVO().setKey(preview.getPath() + File.separator + preview.getName())
                     .setTitle(preview.getName()).setCode(preview.getCode())).collect(Collectors.toList());
@@ -241,7 +241,7 @@ public class GenServiceImpl implements GenService {
     private List<GenPreviewBO> previewList(Long tableId) {
         SysGenTable sysGenTable = sysGenTable(tableId);
         List<GenColumnDTO> genColumnList = sysGenColumnService.list(sysGenTable);
-        if (CollectionUtil.isEmpty(genColumnList)) {
+        if (CollUtil.isEmpty(genColumnList)) {
             throw ServiceException.notFound();
         }
         String packageName = sysGenTable.getPackageName();
@@ -271,7 +271,7 @@ public class GenServiceImpl implements GenService {
             // mapper
             result.add(mapper(templateBO));
             // xml
-            result.add(xml(templateBO));
+            result.add(mapperXml(templateBO));
             // 查询vo
             result.add(queryVO(templateBO));
             // 查询导出vo
@@ -301,7 +301,7 @@ public class GenServiceImpl implements GenService {
 
     private GenPreviewBO access(GenTemplateBO templateBO) {
         String path = javaPath(templateBO) + "access";
-        return loadPathAndCode(path, "access.vm", Dict.parse(templateBO)).setName("AccessConstant.java");
+        return loadPathAndCode(path, "access.vm", Dict.parse(templateBO)).setName(templateBO.getClassName() + "AccessConstant.java");
     }
 
     private GenPreviewBO entity(GenTemplateBO templateBO) {
@@ -314,9 +314,9 @@ public class GenServiceImpl implements GenService {
         return loadPathAndCode(path, "mapper.vm", Dict.parse(templateBO)).setName(templateBO.getClassName() + "Mapper.java");
     }
 
-    private GenPreviewBO xml(GenTemplateBO templateBO) {
-        String path = xmlPath() + "xml";
-        return loadPathAndCode(path, "xml.vm", Dict.parse(templateBO)).setName(templateBO.getClassName() + "Mapper.xml");
+    private GenPreviewBO mapperXml(GenTemplateBO templateBO) {
+        String path = resourcesPath() + "mapper";
+        return loadPathAndCode(path, "mapperXml.vm", Dict.parse(templateBO)).setName(templateBO.getClassName() + "Mapper.xml");
     }
 
     private GenPreviewBO queryVO(GenTemplateBO templateBO) {
@@ -364,14 +364,14 @@ public class GenServiceImpl implements GenService {
                 + "java" + File.separator + templateBO.getPackageName() + File.separator;
     }
 
-    private String xmlPath() {
+    private String resourcesPath() {
         return genProperties.getProjectName() + File.separator + "src" + File.separator + "main" + File.separator
-                + "resources" + File.separator + "mapper" + File.separator;
+                + "resources" + File.separator;
     }
 
     private List<GenTemplateColumnBO> columnList(List<GenColumnDTO> genColumnList) {
         return genColumnList.stream().map(item -> {
-            GenTemplateColumnBO columnBO = DataUtil.toBean(item, GenTemplateColumnBO.class);
+            GenTemplateColumnBO columnBO = BeanUtil.toBean(item, GenTemplateColumnBO.class);
             columnBO.setFieldChange(!StrUtil.toCamelCase(item.getColumnName()).equals(item.getFieldName()));
             columnBO.setUpperFirstFieldName(StrUtil.upperFirst(item.getFieldName()));
             return columnBO;

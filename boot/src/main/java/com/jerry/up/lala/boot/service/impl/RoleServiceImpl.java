@@ -1,6 +1,6 @@
 package com.jerry.up.lala.boot.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
-import com.jerry.up.lala.boot.access.AccessTenantConstant;
+import com.jerry.up.lala.boot.access.TenantAccessConstant;
 import com.jerry.up.lala.boot.dto.RoleDTO;
 import com.jerry.up.lala.boot.dto.RoleQueryDTO;
 import com.jerry.up.lala.boot.entity.*;
@@ -23,13 +23,17 @@ import com.jerry.up.lala.boot.vo.RoleInfoVO;
 import com.jerry.up.lala.boot.vo.RoleQueryVO;
 import com.jerry.up.lala.boot.vo.RoleSaveVO;
 import com.jerry.up.lala.boot.vo.RoleVO;
-import com.jerry.up.lala.framework.core.common.*;
-import com.jerry.up.lala.framework.core.data.DataUtil;
-import com.jerry.up.lala.framework.core.exception.ServiceException;
-import com.jerry.up.lala.framework.core.satoken.SaTokenUtil;
-import com.jerry.up.lala.framework.core.data.CheckUtil;
-import com.jerry.up.lala.framework.core.data.PageUtil;
-import com.jerry.up.lala.framework.core.data.StringUtil;
+import com.jerry.up.lala.framework.boot.page.PageUtil;
+import com.jerry.up.lala.framework.boot.satoken.SaTokenUtil;
+import com.jerry.up.lala.framework.common.exception.Errors;
+import com.jerry.up.lala.framework.common.exception.ServiceException;
+import com.jerry.up.lala.framework.common.model.DataIdBody;
+import com.jerry.up.lala.framework.common.model.LoginUser;
+import com.jerry.up.lala.framework.common.model.PageQuery;
+import com.jerry.up.lala.framework.common.r.PageR;
+import com.jerry.up.lala.framework.common.util.BeanUtil;
+import com.jerry.up.lala.framework.common.util.CheckUtil;
+import com.jerry.up.lala.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +62,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public PageR<RoleVO> pageQuery(RoleQueryVO roleQueryVO) {
-        RoleQueryDTO queryDTO = DataUtil.toBean(roleQueryVO, RoleQueryDTO.class);
+        RoleQueryDTO queryDTO = BeanUtil.toBean(roleQueryVO, RoleQueryDTO.class);
         IPage<Role> pageResult = pageByDTO(roleQueryVO, queryDTO);
         try {
             return PageUtil.toPageR(pageResult, RoleVO.class);
@@ -69,10 +73,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<RoleVO> listQuery(RoleQueryVO roleQueryVO) {
-        RoleQueryDTO queryDTO = DataUtil.toBean(roleQueryVO, RoleQueryDTO.class);
+        RoleQueryDTO queryDTO = BeanUtil.toBean(roleQueryVO, RoleQueryDTO.class);
         List<Role> roleList = listByDTO(queryDTO);
         try {
-            return DataUtil.toBeanList(roleList, RoleVO.class);
+            return BeanUtil.toBeanList(roleList, RoleVO.class);
         } catch (Exception e) {
             throw ServiceException.error(Errors.QUERY_ERROR, e);
         }
@@ -81,7 +85,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public RoleInfoVO info(Long id) {
         RoleDTO roleDTO = infoDTO(id);
-        return DataUtil.toBean(roleDTO, RoleInfoVO.class);
+        return BeanUtil.toBean(roleDTO, RoleInfoVO.class);
     }
 
     private RoleDTO infoDTO(Long id) {
@@ -92,7 +96,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (roleDTO == null) {
             throw ServiceException.notFound();
         }
-        DataUtil.beanFormat(roleDTO);
+        BeanUtil.beanFormat(roleDTO);
         return roleDTO;
     }
 
@@ -123,7 +127,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         try {
             Date now = new Date();
             String currentUserId = SaTokenUtil.currentUser().getUserId();
-            Role role = DataUtil.toBean(roleSaveVO, Role.class);
+            Role role = BeanUtil.toBean(roleSaveVO, Role.class);
             role.setCreateTime(now);
             role.setCreateUser(currentUserId);
             save(role);
@@ -148,25 +152,25 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             String currentUserId = SaTokenUtil.currentUser().getUserId();
             List<Long> oldMenuIds = roleDTO.getMenuIds();
 
-            DataUtil.copy(roleSaveVO, roleDTO);
+            BeanUtil.copy(roleSaveVO, roleDTO);
             roleDTO.setUpdateTime(now);
             roleDTO.setUpdateUser(currentUserId);
             updateById(roleDTO);
 
             List<Long> menuIds = roleSaveVO.getMenuIds();
 
-            if (CollectionUtil.isNotEmpty(menuIds)) {
+            if (CollUtil.isNotEmpty(menuIds)) {
                 // 新增的菜单ID列表
-                List<Long> addMenuIds = menuIds.stream().filter(item -> !CollectionUtil.contains(oldMenuIds, item))
+                List<Long> addMenuIds = menuIds.stream().filter(item -> !CollUtil.contains(oldMenuIds, item))
                         .collect(Collectors.toList());
                 roleMenuService.add(addMenuIds, id, now, currentUserId);
             }
 
-            if (CollectionUtil.isNotEmpty(oldMenuIds)) {
+            if (CollUtil.isNotEmpty(oldMenuIds)) {
                 // 删除的菜单ID列表
-                List<Long> deleteMenuIds = oldMenuIds.stream().filter(item -> !CollectionUtil.contains(menuIds, item))
+                List<Long> deleteMenuIds = oldMenuIds.stream().filter(item -> !CollUtil.contains(menuIds, item))
                         .collect(Collectors.toList());
-                if (CollectionUtil.isNotEmpty(deleteMenuIds)) {
+                if (CollUtil.isNotEmpty(deleteMenuIds)) {
                     roleMenuService.remove(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, id).in(RoleMenu::getMenuId, deleteMenuIds));
                 }
             }
@@ -192,13 +196,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                         .leftJoin(User.class, on -> on.eq(User::getId, RoleUser::getUserId))
                         .eq(Role::getState, true);
                 List<Long> menuIds = roleMenuService.selectJoinList(Long.class, roleWrapper);
-                if (CollectionUtil.isEmpty(menuIds)) {
+                if (CollUtil.isEmpty(menuIds)) {
                     return new ArrayList<>();
                 }
                 queryWrapper.in(SysMenu::getId, menuIds);
             } else {
                 // 系统管理员 才允许查看集团管理
-                queryWrapper.notLike(SysMenu::getAccessCodes, AccessTenantConstant.TENANT);
+                queryWrapper.notLike(SysMenu::getAccessCodes, TenantAccessConstant.TENANT);
             }
         }
         List<SysMenu> sysMenuList = sysMenuService.list(queryWrapper);
